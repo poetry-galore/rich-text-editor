@@ -10,6 +10,8 @@ import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
 import "./RichTextEditor.css";
 
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
+
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
 // try to recover gracefully without losing user data.
@@ -29,7 +31,7 @@ function RichTextEditor({
 }: RichTextEditorProps) {
     const customContentEditable = useMemo(() => {
         return (
-            <ContentEditable className="relative min-h-full p-2 rounded-lg bg-slate-100 text-slate-800 focus:outline-none" />
+            <ContentEditable className="relative min-h-full p-2 text-slate-800 focus:outline-none" />
         );
     }, []);
 
@@ -54,8 +56,9 @@ function RichTextEditor({
     return (
         <div {...rest}>
             <LexicalComposer initialConfig={initialConfig}>
-                <div className="mx-auto relative flex flex-col shadow-md rounded-lg w-full h-full">
+                <div className="mx-auto relative bg-slate-50 flex flex-col mt-10 shadow-sm border rounded-lg w-full h-full">
                     {/* Toolbar Here */}
+                    <ToolbarPlugin />
                     <div className="relative min-h-full min-w-full">
                         <RichTextPlugin
                             contentEditable={customContentEditable}

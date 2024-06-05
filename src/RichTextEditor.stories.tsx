@@ -6,20 +6,20 @@ const meta = {
   title: "RichTextEditor",
   component: RichTextEditor,
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
   },
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <div className="relative h-[500px] w-[800px]">
+      <div className="relative h-[500px] container">
         <Story />
       </div>
     ),
   ],
   argTypes: {
     placeholderText: { control: "text" },
-    editable: { control: "boolean" }
-  }
+    editable: { control: "boolean" },
+  },
 } satisfies Meta<typeof RichTextEditor>;
 
 export default meta;
