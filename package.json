@@ -1,5 +1,5 @@
 {
-  "name": "rich-text-editor",
+  "name": "@poetry-galore/rich-text-editor",
   "version": "0.0.1",
   "description": "Rich text editor using lexical",
   "main": "dist/cjs/index.js",
@@ -21,6 +21,9 @@
     "url": "https://github.com/poetry-galore/rich-text-editor/issues"
   },
   "homepage": "https://github.com/poetry-galore/rich-text-editor#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/poetry-galore"
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.5.0",
     "@rollup/plugin-commonjs": "^25.0.8",
