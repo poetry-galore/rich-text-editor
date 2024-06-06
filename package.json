@@ -1,10 +1,18 @@
 {
   "name": "@poetry-galore/rich-text-editor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Rich text editor using lexical",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/**",
+    "src/**/*.@(ts|tsx|js|jsx)",
+    "!.storybook/*",
+    "!**/*.stories.@(ts|tsx|js|jsx)",
+    "!**/*.test.@(ts|tsx|js|jsx)",
+    "!src/**/*.mdx"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
