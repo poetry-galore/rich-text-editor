@@ -2,16 +2,19 @@ import { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 
-import ToolbarPlugin from "./ToolbarPlugin";
+import TextActions from "./TextActions";
 
 const initialConfig = {
-    namespace: "ToolbarPluginStory",
+    namespace: "TextActionsStory",
     onError: fn(),
 };
 
 const meta = {
-    title: "plugins/ToolbarPlugin",
-    component: ToolbarPlugin,
+    title: "components/TextActions",
+    component: TextActions,
+    parameters: {
+        layout: "centered",
+    },
     tags: ["autodocs"],
     decorators: [
         (Story) => (
@@ -20,7 +23,7 @@ const meta = {
             </LexicalComposer>
         ),
     ],
-} satisfies Meta<typeof ToolbarPlugin>;
+} satisfies Meta<typeof TextActions>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -31,7 +34,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /**
- * ToolbarPlugin in a non-editable editor
+ * TextActions in a non-editable editor
  */
 export const NoneEditable: Story = {
     decorators: [

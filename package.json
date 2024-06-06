@@ -1,6 +1,6 @@
 {
   "name": "@poetry-galore/rich-text-editor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Rich text editor using lexical",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -63,6 +63,7 @@
     "@lexical/utils": "^0.16.0",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toggle": "^1.0.3",
     "@vitejs/plugin-react": "^4.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
