@@ -8,11 +8,14 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
+import { EditorState } from "lexical";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 
 import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
 import "./RichTextEditor.css";
 
+// Custom plugins
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
@@ -29,9 +32,20 @@ function RichTextEditor({
     placeholderText = "Start your poem...",
     editable = true,
     editorState,
+    onEditorChange,
+    setEditorState,
     children,
     ...rest
 }: RichTextEditorProps) {
+    /**
+     * Updates the editor state value mapped to the setEditorState function
+     * in the parent to the json string of the contents.
+     */
+    function onChange(editorState: EditorState) {
+        const editorStateJSON = editorState.toJSON();
+        setEditorState && setEditorState(JSON.stringify(editorStateJSON));
+    }
+
     const customContentEditable = useMemo(() => {
         return (
             <ContentEditable className="relative min-h-full p-2 text-slate-800 focus:outline-none" />
@@ -75,6 +89,14 @@ function RichTextEditor({
                 </div>
                 {/** Other plugins */}
                 <ListPlugin />
+                {setEditorState && <OnChangePlugin ignoreSelectionChange={true} onChange={onChange} />}
+                {onEditorChange &&
+                    onEditorChange.map((onChange, index) => (
+                        <OnChangePlugin
+                            key={index}
+                            onChange={onChange}
+                        />
+                    ))}
                 {children}
             </LexicalComposer>
         </div>

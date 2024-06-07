@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
+
 import RichTextEditor from "./RichTextEditor";
 import "./RichTextEditor.css";
 
@@ -48,3 +50,31 @@ export const NotEditable: Story = {
     editable: false,
   },
 };
+
+/**
+ * Passing onChange prop
+ */
+export const RegisterOnEditorChange: Story = {
+  args: {
+    onEditorChange: [fn()]
+  }
+}
+
+/**
+ * Passing setEditorState prop
+ */
+export const PassSetEditorStateProp: Story = {
+  args: {
+    setEditorState: fn()
+  }
+}
+
+/**
+ * Passing setEditorState and onEditorChange props
+ */
+export const OnEditorChangeAndSetEditorChange: Story = {
+  args: {
+    setEditorState: fn(),
+    onEditorChange: [fn()]
+  }
+}
