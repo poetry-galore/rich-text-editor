@@ -4,7 +4,10 @@ import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListItemNode, ListNode } from "@lexical/list";
 
 import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
@@ -49,6 +52,7 @@ function RichTextEditor({
         onError,
         editable,
         editorState,
+        nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
     };
 
     rest.className = rest.className ? rest.className : "w-full h-full";
@@ -56,7 +60,7 @@ function RichTextEditor({
     return (
         <div {...rest}>
             <LexicalComposer initialConfig={initialConfig}>
-                <div className="mx-auto relative bg-slate-50 flex flex-col mt-10 shadow-sm border rounded-lg w-full h-full">
+                <div className="mx-auto relative bg-slate-50  flex flex-col mt-10 shadow-sm border rounded-lg w-full min-h-full">
                     {/* Toolbar Here */}
                     <ToolbarPlugin />
                     <div className="relative min-h-full min-w-full">
@@ -70,6 +74,7 @@ function RichTextEditor({
                     </div>
                 </div>
                 {/** Other plugins */}
+                <ListPlugin />
                 {children}
             </LexicalComposer>
         </div>
