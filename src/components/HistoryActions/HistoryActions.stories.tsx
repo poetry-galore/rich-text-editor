@@ -14,7 +14,10 @@ const meta = {
   decorators: [
     (Story) => (
       <LexicalComposer
-        initialConfig={{ namespace: "HistoryActionsStory", onError: fn() }}
+        initialConfig={{
+          namespace: "HistoryActionsStory",
+          onError: fn(),
+        }}
       >
         <Story />
       </LexicalComposer>

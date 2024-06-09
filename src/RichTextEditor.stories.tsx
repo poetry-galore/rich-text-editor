@@ -56,18 +56,18 @@ export const NotEditable: Story = {
  */
 export const RegisterOnEditorChange: Story = {
   args: {
-    onEditorChange: [fn()]
-  }
-}
+    onEditorChange: [fn()],
+  },
+};
 
 /**
  * Passing setEditorState prop
  */
 export const PassSetEditorStateProp: Story = {
   args: {
-    setEditorState: fn()
-  }
-}
+    setEditorState: fn(),
+  },
+};
 
 /**
  * Passing setEditorState and onEditorChange props
@@ -75,6 +75,6 @@ export const PassSetEditorStateProp: Story = {
 export const OnEditorChangeAndSetEditorChange: Story = {
   args: {
     setEditorState: fn(),
-    onEditorChange: [fn()]
-  }
-}
+    onEditorChange: [fn()],
+  },
+};

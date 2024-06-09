@@ -27,7 +27,7 @@ interface Props {
   onEditorChange?: ((
     editorState: EditorState,
     editor: LexicalEditor,
-    tags: Set<string>
+    tags: Set<string>,
   ) => void)[];
   /**
    * React state update function for setting the editor state.

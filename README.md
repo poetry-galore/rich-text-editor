@@ -1,6 +1,6 @@
 # rich-text-editor
 
-Rich text editor for React created using the [lexical](<https://github.com/facebook/lexical>) framework.
+Rich text editor for React created using the [lexical](https://github.com/facebook/lexical) framework.
 
 ## Getting started
 
@@ -28,13 +28,13 @@ export default App;
 
 ### Props
 
-| Name | Type | Default | Description |
-| ---- | ---- | ---- | ---- |
-| placeholderText | string | 'Start your poem...' | Text displayed when editor is empty |
-| editable | boolean | true | Set to `false` to disable the editor |
-| editorState | InitialEditorStateType \| undefined | undefined | Sets initial content of the editor |
-| onEditorChange | `((editorState: EditorState, editor: LexicalEditor, tags: Set<string>) => void)[]` \| undefined | undefined | Array of callbacks to trigger when the editor updates |
-| setEditorState | React.Dispatch<React.SetStateAction\<string>> \| undefined | undefined | React state update function for setting the editor state.|
+| Name            | Type                                                                                            | Default              | Description                                               |
+| --------------- | ----------------------------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------- |
+| placeholderText | string                                                                                          | 'Start your poem...' | Text displayed when editor is empty                       |
+| editable        | boolean                                                                                         | true                 | Set to `false` to disable the editor                      |
+| editorState     | InitialEditorStateType \| undefined                                                             | undefined            | Sets initial content of the editor                        |
+| onEditorChange  | `((editorState: EditorState, editor: LexicalEditor, tags: Set<string>) => void)[]` \| undefined | undefined            | Array of callbacks to trigger when the editor updates     |
+| setEditorState  | React.Dispatch<React.SetStateAction\<string>> \| undefined                                      | undefined            | React state update function for setting the editor state. |
 
 > Any other props from `React.AllHTMLAttributes<HTMLDivElement>` can be passed.
 > These props are applied to the div element that is the container of the `LexicalComposer`.
