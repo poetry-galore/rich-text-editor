@@ -1,0 +1,60 @@
+# Set Initial Editor State
+
+If you have an already saved editor state and you want to reload
+the state in the editor, you can pass the editor state as a string
+to the [`editorState`](/docs/props.mdx#editorstate) prop.
+
+Example of initial editor state:
+
+```js copy filename="initial_editor_state.js"
+export const InitialEditorState = {
+  root: {
+    children: [
+      {
+        children: [
+          {
+            detail: 0,
+            format: 1,
+            mode: "normal",
+            style: "",
+            text: "Be bold and share your thoughts",
+            type: "text",
+            version: 1,
+          },
+        ],
+        direction: "ltr",
+        format: "",
+        indent: 0,
+        type: "paragraph",
+        version: 1,
+        textFormat: 1,
+      }
+    ],
+    direction: "ltr",
+    format: "",
+    indent: 0,
+    type: "root",
+    version: 1,
+  },
+};
+```
+
+Import the editor state and stringify it, and pass it to the `editorState` prop.
+
+```tsx {2, 5, 9} copy filename="components/Editor.tsx"
+import RichTextEditor from "@poetry-galore/rich-text-editor";
+import { InitialEditorState } from "../initial_editor_state";
+
+export default function Editor() {
+  const initialEditorStateString = JSON.stringify(InitialEditorState);
+
+  return (
+    <div className="container">
+      <RichTextEditor editorState={initialEditorStateString} />
+    </div>
+  );
+}
+```
+
+
+

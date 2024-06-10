@@ -1,0 +1,70 @@
+import { Steps, Tabs } from "nextra/components";
+
+# Getting Started
+
+<Steps>
+### Install
+
+Install the `@poetry-galore/rich-text-editor` package.
+
+<Tabs items={['npm']}>
+  <Tabs.Tab>
+
+```bash copy
+npm install @poetry-galore/rich-text-editor
+```
+
+  </Tabs.Tab>
+</Tabs>
+ 
+### Ready to Go
+
+You can now import `RichTextEditor` and use it in your project.
+
+Create a component for your editor:
+
+```tsx copy filename="components/editor.tsx"
+import RichTextEditor from "@poetry-galore/rich-text-editor";
+
+function Editor() {
+  // State variable to store the editor content as json string
+  // so that it can be saved or used as you'd like.
+  const [editorState, setEditorState] = useState<string>("");
+
+  useEffect(() => {
+    // Console log the json string of the editor content.
+    console.log(editorState);
+    // You can do other stuff here like saving the contents
+  }, [editorState]);
+
+  return (
+    <div className="container">
+      <RichTextEditor
+        placeholderText="Start writing ..."
+        setEditorState={setEditorState}
+      />
+    </div>
+  );
+}
+
+export default Editor;
+```
+
+Use the component in your App:
+
+```tsx copy filename="App.tsx"
+import Editor from "./components/editor";
+
+function App() {
+  return (
+    <div>
+      <h1>Custom Editor</h1>
+      <Editor />
+    </div>
+  );
+}
+
+export default App;
+```
+
+</Steps>

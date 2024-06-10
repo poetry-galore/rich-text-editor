@@ -1,0 +1,163 @@
+import { Tabs } from "nextra/components";
+
+import { OptionTable } from "/components/table";
+
+# Props
+
+### `placeholderText`
+
+Text displayed when editor is empty
+
+<OptionTable
+  options={[
+    [
+      "placeholderText",
+      "string",
+      "Start your poem...",
+      "Text displayed when editor is empty",
+    ],
+  ]}
+/>
+
+```tsx filename="custom placeholder"
+<RichTextEditor placeholderText="Once upon a time..." />
+```
+
+### `editable`
+
+<OptionTable
+  options={[
+    ["editable", "boolean", "True", "Whether text can be edited in the editor"],
+  ]}
+/>
+
+When set to `false`, you cannot write text or edit existing text in the editor.
+Also toolbar is disabled and the formatting or redo/undo options are not available.
+
+```tsx filename="editable"
+// Toolbar is also disabled
+<RichTextEditor editable={false} />
+```
+
+### `editorState`
+
+<OptionTable
+  options={[
+    [
+      "editorState",
+      "InitialEditorStateType | undefined",
+      "undefined",
+      "Use to set the initial state of the editor",
+    ],
+  ]}
+/>
+
+A string of the editor state set by the `setEditorState` prop can be passed to this prop
+to restore the saved editor state.
+
+<Tabs items={['Editor.tsx', 'InitialEditorState.ts']}>
+    <Tabs.Tab>
+
+        ```tsx
+        import  InitialEditorState from './InitialEditorState';
+
+        <RichTextEditor editorState={JSON.stringify(InitialEditorState)} />
+        ```
+
+    </Tabs.Tab>
+    <Tabs.Tab>
+
+        ```tsx filename="editable"
+
+        export const InitialEditorState = {
+            root: {
+                children: [
+                {
+                    children: [
+                    {
+                        detail: 0,
+                        format: 1,
+                        mode: "normal",
+                        style: "",
+                        text: "Be bold and share your thoughts",
+                        type: "text",
+                        version: 1,
+                    },
+                    ],
+                    direction: "ltr",
+                    format: "",
+                    indent: 0,
+                    type: "paragraph",
+                    version: 1,
+                    textFormat: 1,
+                }
+                ],
+                direction: "ltr",
+                format: "",
+                indent: 0,
+                type: "root",
+                version: 1,
+            },
+        };
+        ```
+
+    </Tabs.Tab>
+
+</Tabs>
+
+### `setEditorState`
+
+<OptionTable
+  options={[
+    [
+      "setEditorState",
+      `React.Dispatch<
+  React.SetStateAction<string>
+>  | undefined`,
+      "undefined",
+      "React state update function for setting the editor state.",
+    ],
+  ]}
+/>
+
+Should be a state update function that is returned by `useState<string>(""){:tsx}`.
+
+In the case below, the `editorState` state value is updated whenever the editor updates.
+
+```tsx
+import { useState } from "react";
+
+export default function Editor() {
+    const [editorState, setEditorState] = useState<string>("");
+    return <RichTextEditor setEditorState={setEditorState} />
+}
+```
+
+### `onEditorChange`
+
+<OptionTable
+  options={[
+    [
+      "onEditorChange",
+      `((editorState: EditorState,
+  editor: LexicalEditor,
+  tags: Set<string>) => void
+)[] | undefined`,
+      "undefined",
+      "Array of callbacks to trigger when the editor updates",
+    ],
+  ]}
+/>
+
+The callbacks can perform different tasks and can be used to extend the functionality of the editor.
+
+```tsx
+export default function Editor() {
+    // Console logs the editor state after every update
+    function onChange(editorState) {
+        console.log(editorState.toJSON());
+    }
+
+    return <RichTextEditor onEditorChange={[onChange]}>
+}
+```

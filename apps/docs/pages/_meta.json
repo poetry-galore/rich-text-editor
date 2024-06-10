@@ -1,3 +1,21 @@
 {
-  "index": "Home"
+  "*":{
+    "type":"page"
+  },
+  "index": {
+    "title": "Home",
+    "display": "hidden",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "docs": {
+    "title": "Documentation"
+  },
+  "about": {
+    "title": "About",
+    "theme": {
+      "typesetting": "article"
+    }
+  }
 }
