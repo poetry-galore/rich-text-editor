@@ -2,7 +2,7 @@
 
 If you have an already saved editor state and you want to reload
 the state in the editor, you can pass the editor state as a string
-to the [`editorState`](/docs/props.mdx#editorstate) prop.
+to the [`initialEditorState`](/docs/props.mdx#initialeditorstate) prop.
 
 Example of initial editor state:
 
@@ -39,7 +39,7 @@ export const InitialEditorState = {
 };
 ```
 
-Import the editor state and stringify it, and pass it to the `editorState` prop.
+Import the editor state and stringify it, and pass it to the `initialEditorState` prop.
 
 ```tsx {2, 5, 9} copy filename="components/Editor.tsx"
 import RichTextEditor from "@poetry-galore/rich-text-editor";
@@ -50,7 +50,7 @@ export default function Editor() {
 
   return (
     <div className="container">
-      <RichTextEditor editorState={initialEditorStateString} />
+      <RichTextEditor initialEditorState={initialEditorStateString} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ function onError(error: Error) {
 function RichTextEditor({
   placeholderText = "Start your poem...",
   editable = true,
-  editorState,
+  initialEditorState,
   onEditorChange,
   setEditorState,
   children,
@@ -65,7 +65,7 @@ function RichTextEditor({
     theme: RichTextEditorTheme,
     onError,
     editable,
-    editorState,
+    initialEditorState,
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
   };
 

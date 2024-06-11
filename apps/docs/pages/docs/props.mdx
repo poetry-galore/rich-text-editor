@@ -39,12 +39,12 @@ Also toolbar is disabled and the formatting or redo/undo options are not availab
 <RichTextEditor editable={false} />
 ```
 
-### `editorState`
+### `initialEditorState`
 
 <OptionTable
   options={[
     [
-      "editorState",
+      "initialEditorState",
       "InitialEditorStateType | undefined",
       "undefined",
       "Use to set the initial state of the editor",
@@ -61,7 +61,7 @@ to restore the saved editor state.
         ```tsx
         import  InitialEditorState from './InitialEditorState';
 
-        <RichTextEditor editorState={JSON.stringify(InitialEditorState)} />
+        <RichTextEditor initialEditorState={JSON.stringify(InitialEditorState)} />
         ```
 
     </Tabs.Tab>

@@ -13,7 +13,7 @@ interface Props {
   /**
    * Initial state of the editor
    */
-  editorState?: InitialEditorStateType;
+  initialEditorState?: InitialEditorStateType;
   /**
    * List of callbacks triggered when the editor undergoes an update.
    *

@@ -34,7 +34,7 @@ export default App;
 | --------------- | ----------------------------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------- |
 | placeholderText | string                                                                                          | 'Start your poem...' | Text displayed when editor is empty                       |
 | editable        | boolean                                                                                         | true                 | Set to `false` to disable the editor                      |
-| editorState     | InitialEditorStateType \| undefined                                                             | undefined            | Sets initial content of the editor                        |
+| initialEditorState     | InitialEditorStateType \| undefined                                                             | undefined            | Sets initial content of the editor                        |
 | onEditorChange  | `((editorState: EditorState, editor: LexicalEditor, tags: Set<string>) => void)[]` \| undefined | undefined            | Array of callbacks to trigger when the editor updates     |
 | setEditorState  | React.Dispatch<React.SetStateAction\<string>> \| undefined                                      | undefined            | React state update function for setting the editor state. |
 
@@ -50,7 +50,7 @@ export default App;
 function RichTextEditor({
     placeholderText = "Start your poem...",
     editable = true,
-    editorState,
+    initialEditorState,
     onEditorChange,
     setEditorState,
     children,
@@ -78,7 +78,7 @@ function RichTextEditor({
 function RichTextEditor({
     placeholderText = "Start your poem...",
     editable = true,
-    editorState,
+    initialEditorState,
     onEditorChange,
     setEditorState,
     children,
