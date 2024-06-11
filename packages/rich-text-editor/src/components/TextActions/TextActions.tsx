@@ -128,6 +128,7 @@ export default function TextActions() {
       {textFormats.map((format) => {
         return (
           <Toggle
+            key={format.type}
             aria-label={format.type}
             size={"sm"}
             pressed={format.isSet}
