@@ -1,5 +1,5 @@
-import { Tabs } from 'nextra/components'
-import Image from 'next/image'
+import { Tabs } from "nextra/components";
+import Image from "next/image";
 
 # RichTextEditor
 
@@ -11,24 +11,26 @@ an editor and gives you the option to extend it's functionality with your own pl
 
 To start using RichTextEditor, install it first:
 
-<Tabs items={['npm']}>
+<Tabs items={["npm"]}>
   <Tabs.Tab>
-  ```bash copy
-  npm install @poetry-galore/rich-text-editor
-  ```
+
+    ```bash copy
+    npm install @poetry-galore/rich-text-editor
+    ```
+
   </Tabs.Tab>
 </Tabs>
 
 Use in your project:
 
 ```tsx copy
-import './App.css'
-import RichTextEditor from '@poetry-galore/rich-text-editor';
+import "./App.css";
+import RichTextEditor from "@poetry-galore/rich-text-editor";
 
 function App() {
   return (
     <div className="container">
-        <RichTextEditor />
+      <RichTextEditor />
     </div>
   );
 }
@@ -38,4 +40,10 @@ export default App;
 
 Output
 
-<Image src="/assets/editor-example.png" alt="editor" width={900} height={600} className='rounded-lg' />
+<Image
+  src="/assets/default-editor.png"
+  alt="editor"
+  width={900}
+  height={600}
+  className="rounded-lg"
+/>

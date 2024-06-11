@@ -1,15 +1,14 @@
-import { Steps } from 'nextra/components'
-
+import { Steps } from "nextra/components";
 
 # Get Editor State
 
 There are currently two ways to get the editor state:
-1. Using the [`setEditorState`](/docs/props.mdx#seteditorstate) prop and passing a state update function to it.
-The stateful value is set to the string of the JSON of the editor state.
-2. Creating your own callback to listen on changes in the editor and using the
-editor state passed as a parameter to the callback. The callbacks can be registered
-using the [`onEditorChange`](/docs/props.mdx#oneditorchange) prop.
 
+1. Using the [`setEditorState`](/docs/props.mdx#seteditorstate) prop and passing a state update function to it.
+   The stateful value is set to the string of the JSON of the editor state.
+2. Creating your own callback to listen on changes in the editor and using the
+   editor state passed as a parameter to the callback. The callbacks can be registered
+   using the [`onEditorChange`](/docs/props.mdx#oneditorchange) prop.
 
 ## Using `setEditorState` prop
 
@@ -77,7 +76,7 @@ export default function Editor() {
 Example of `editorState` set using this method:
 
 ```json copy
-'{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Once upon a time","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+"{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Once upon a time\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}"
 ```
 
 ## Using `onEditorChange`
@@ -101,7 +100,7 @@ To achieve the same results as using the `setEditorState` prop, you can do this:
 ### Create a callback to be triggered when changes occur
 
 ```tsx {8-12} copy filename="components/Editor.tsx"
-import { EditorState } from 'lexical';
+import { EditorState } from "lexical";
 
 import RichTextEditor from "@poetry-galore/rich-text-editor";
 
@@ -125,7 +124,7 @@ export default function Editor() {
 ### Pass the callback in the `onEditorChange` prop
 
 ```tsx {16} copy filename="components/Editor.tsx"
-import { EditorState } from 'lexical';
+import { EditorState } from "lexical";
 
 import RichTextEditor from "@poetry-galore/rich-text-editor";
 
@@ -147,4 +146,3 @@ export default function Editor() {
 ```
 
 </Steps>
-

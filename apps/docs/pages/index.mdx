@@ -1,12 +1,28 @@
 import Image from "next/image";
+import { Tabs } from "nextra/components";
+import ButtonLink from "/components/button-link";
 
 # RichTextEditor
 
-Simple editor made using Lexical.
+<div className="font-bold text-3xl mt-10">
+  Simple WYSIWYG editor made using Lexical.
+</div>
+
+<div className="w-full md:w-5/6 lg:w-2/3 xl:w-1/2 mx-auto flex justify-between items-center mt-5">
+  <ButtonLink label="Get Started" to="/docs/introduction" />
+
+  <div className="mt-4">
+    
+    ```bash copy
+    npm install @poetry-galore/rich-text-editor
+    ```
+
+  </div>
+</div>
 
 <div className="flex justify-center mt-10">
   <Image
-    src="/assets/editor-screenshot.png"
+    src="/assets/editor.png"
     alt="editor"
     width={900}
     height={600}

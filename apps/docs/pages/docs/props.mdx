@@ -128,8 +128,8 @@ In the case below, the `editorState` state value is updated whenever the editor 
 import { useState } from "react";
 
 export default function Editor() {
-    const [editorState, setEditorState] = useState<string>("");
-    return <RichTextEditor setEditorState={setEditorState} />
+  const [editorState, setEditorState] = useState<string>("");
+  return <RichTextEditor setEditorState={setEditorState} />;
 }
 ```
 
