@@ -11,6 +11,19 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    backgrounds: {
+      default: "light",
+      values: [
+        {
+          name: "light",
+          value: "#ffffff", // bg-white
+        },
+        {
+          name: "dark",
+          value: "#0f172a", // bg-slate-900
+        },
+      ],
+    },
   },
   decorators: [
     withThemeByClassName<ReactRenderer>({
