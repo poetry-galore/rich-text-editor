@@ -12,10 +12,10 @@ const RichTextEditorTheme: EditorThemeClasses = {
     superscript: "",
   },
   heading: {
-    h1: "text-4xl",
-    h2: "text-3xl",
-    h3: "text-2xl",
-    h4: "text-xl",
+    h1: "text-4xl my-3",
+    h2: "text-3xl my-2",
+    h3: "text-2xl my-1",
+    h4: "text-xl my-1",
     h5: "text-lg",
     h6: "text-lg",
   },
@@ -23,7 +23,8 @@ const RichTextEditorTheme: EditorThemeClasses = {
     ul: "list-disc list-inside leading-relaxed",
     ol: "list-decimal list-inside leading-relaxed",
   },
-  quote: "ms-8 my-2 p-2 border-l-4 border-slate-200 text-slate-600",
+  quote:
+    "ms-8 my-2 p-2 border-l-4 border-slate-200 text-slate-600 dark:border-slate-500 dark:text-slate-400",
 };
 
 export default RichTextEditorTheme;

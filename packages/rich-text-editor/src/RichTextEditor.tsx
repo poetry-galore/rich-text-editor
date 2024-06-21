@@ -48,13 +48,13 @@ function RichTextEditor({
 
   const customContentEditable = useMemo(() => {
     return (
-      <ContentEditable className="relative min-h-full p-2 text-slate-800 focus:outline-none" />
+      <ContentEditable className="w-full min-h-full p-2 focus:outline-none" />
     );
   }, []);
 
   const customPlaceholder = useMemo(() => {
     return (
-      <div className="absolute top-2 left-2 text-slate-600 text-muted-foreground pointer-events-none">
+      <div className="absolute top-2 left-2 text-slate-500 text-muted-foreground pointer-events-none">
         {placeholderText}
       </div>
     );
@@ -69,15 +69,17 @@ function RichTextEditor({
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
   };
 
-  rest.className = rest.className ? rest.className : "w-full h-full";
+  rest.className = rest.className
+    ? rest.className
+    : "w-full h-full text-black dark:text-slate-100";
 
   return (
     <div {...rest}>
       <LexicalComposer initialConfig={initialConfig}>
-        <div className="mx-auto relative bg-slate-50  flex flex-col mt-10 shadow-sm border rounded-lg w-full min-h-full">
+        <div className="relative w-full min-h-full flex flex-col mt-10 border rounded-lg border-slate-400 bg-white dark:bg-slate-900 dark:border-slate-700">
           {/* Toolbar Here */}
           <ToolbarPlugin />
-          <div className="relative min-h-full min-w-full">
+          <div className="relative w-full h-full">
             <RichTextPlugin
               contentEditable={customContentEditable}
               placeholder={customPlaceholder}

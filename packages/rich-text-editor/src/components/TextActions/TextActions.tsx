@@ -124,7 +124,7 @@ export default function TextActions() {
   ];
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-1 text-black dark:text-slate-100">
       {textFormats.map((format) => {
         return (
           <Toggle

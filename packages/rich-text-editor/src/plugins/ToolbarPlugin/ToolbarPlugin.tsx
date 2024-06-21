@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 function ToolbarPlugin() {
   return (
     <>
-      <div className="sticky top-0 z-10 flex justify-center space-x-2 border-b w-full py-1 bg-white dark:bg-slate-500 rounded-lg">
+      <div className="sticky top-1 z-10 flex justify-center space-x-2 w-full mx-auto py-1 px-2 text-black bg-white border-b border-slate-400 rounded-lg rounded-b-none dark:text-slate-100 dark:bg-slate-900 dark:border-slate-700">
         <HistoryActions />
         <Separator
           orientation="vertical"
