@@ -21,7 +21,7 @@
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "pub:beta": "npm run rollup && npm publish --tag beta --access public",
-    "pub:release": "npm build && npm publish --access public"
+    "pub:release": "npm run rollup && npm publish --access public"
   },
   "repository": {
     "type": "git",
