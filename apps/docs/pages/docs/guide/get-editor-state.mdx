@@ -84,10 +84,19 @@ Example of `editorState` set using this method:
 In this method, you get to implement your own update listener that is passed the `editor`, `editorState` and `tags` parameters.
 You can do more than just getting the editor state using this method.
 
-The `onEditorChange` prop accepts an array of callbacks that are triggered when updates occur in the editor.
+The `onEditorChange` prop accepts an array of objects that contain callback to be triggered with options for configuring
+whether to ignore selection and history merge tag changes.
 
 ```ts filename="onEditorChange type"
-onEditorChange?: ((editorState: EditorState, editor: LexicalEditor, tags: Set<string>) => void)[];
+onEditorChange?: {
+  onChange: (
+    editorState: EditorState,
+    editor: LexicalEditor,
+    tags: Set<string>,
+  ) => void;
+  ignoreSelectionChange?: boolean;
+  ignoreHistoryMergeTagChange?: boolean;
+}[];
 ```
 
 > Currently you cannot ignore selection change. An update will ensure that you're able to choose
@@ -115,13 +124,18 @@ export default function Editor() {
 
   return (
     <div className="container">
-      <RichTextEditor onEditorChange={[onChange]} />
+      <RichTextEditor
+        onEditorChange={[{ onChange, ignoreSelectionChange: true }]}
+      />
     </div>
   );
 }
 ```
 
 ### Pass the callback in the `onEditorChange` prop
+
+The `ignoreSelectionChange` option is set to `true` to prevent the `onChange` callback
+from being called when a selection change occurs.
 
 ```tsx {16} copy filename="components/Editor.tsx"
 import { EditorState } from "lexical";
@@ -139,7 +153,9 @@ export default function Editor() {
 
   return (
     <div className="container">
-      <RichTextEditor onEditorChange={[onChange]} />
+      <RichTextEditor
+        onEditorChange={[{ onChange, ignoreSelectionChange: true }]}
+      />
     </div>
   );
 }

@@ -135,29 +135,103 @@ export default function Editor() {
 
 ### `onEditorChange`
 
+An array of objects with the following properties:
+
 <OptionTable
   options={[
     [
-      "onEditorChange",
-      `((editorState: EditorState,
+      "onChange",
+      `(
+  editorState: EditorState,
   editor: LexicalEditor,
-  tags: Set<string>) => void
-)[] | undefined`,
+  tags: Set<string>,
+) => void;
+    `,
+      "",
+      "Callback to trigger when the editor updates",
+    ],
+    [
+      "ignoreSelectionChange",
+      `boolean | undefined`,
       "undefined",
-      "Array of callbacks to trigger when the editor updates",
+      "Whether to ignore selection changes and not to call the callback when those changes occur",
+    ],
+    [
+      "ignoreHistoryMergeTagChange",
+      `boolean | undefined`,
+      "undefined",
+      "Whether to ignore history merge tag changes and don't call the callback when those changes occur",
     ],
   ]}
 />
 
+When the `ignoreSelectionChange` is set to `true`, the `onChange` callback is not triggered when a selection
+is made in the editor. The same applies for the history merge tag changes when the `ignoreHistoryMergeTagChange`
+is `true`.
+
+When the `ignoreSelectionChange` and `ignoreHistoryMergeTagChange` are `undefined` or `false`, the callback is
+triggered when selection or history merge tag changes occur.
+
 The callbacks can perform different tasks and can be used to extend the functionality of the editor.
 
-```tsx
-export default function Editor() {
-    // Console logs the editor state after every update
-    function onChange(editorState) {
-        console.log(editorState.toJSON());
-    }
+<Tabs items={['Trigger on all Changes', 'Ignore Selection Change', 'Multiple callbacks']}>
+  <Tabs.Tab>
 
-    return <RichTextEditor onEditorChange={[onChange]}>
-}
-```
+    ```tsx
+    export default function Editor() {
+      // Console logs the editor state after every update
+      function onChange(editorState) {
+          console.log(editorState.toJSON());
+      }
+
+      return <RichTextEditor onEditorChange={[{onChange}]} />
+    }
+    ```
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+
+    ```tsx
+    export default function Editor() {
+        function onChange(editorState) {
+            console.log(editorState.toJSON());
+        }
+
+        const onEditorChange = [{onChange, ignoreSelectionChange: true}];
+
+        return <RichTextEditor onEditorChange={onEditorChange} />
+    }
+    ```
+
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+
+    ```tsx
+    export default function Editor() {
+        function onChange1(editorState) {
+            console.log(`onChange1: ${editorState.toJSON()}`);
+        }
+
+        function onChange2(editorState) {
+            console.log(`onChange2: ${editorState.toJSON()}`);
+        }
+
+        const onEditorChange = [
+          {
+            onChange: onChange1,
+            ignoreSelectionChange: true
+          },
+          {
+            onChange: onChange2,
+            ignoreHistoryMergeTagChange: true
+          }
+        ];
+
+        return <RichTextEditor onEditorChange={onEditorChange} />
+    }
+    ```
+
+  </Tabs.Tab>
+
+</Tabs>
