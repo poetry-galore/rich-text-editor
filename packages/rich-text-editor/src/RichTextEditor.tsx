@@ -95,8 +95,13 @@ function RichTextEditor({
           <OnChangePlugin ignoreSelectionChange={true} onChange={onChange} />
         )}
         {onEditorChange &&
-          onEditorChange.map((onChange, index) => (
-            <OnChangePlugin key={index} onChange={onChange} />
+          onEditorChange.map((item, index) => (
+            <OnChangePlugin
+              key={index}
+              onChange={item.onChange}
+              ignoreSelectionChange={item.ignoreSelectionChange}
+              ignoreHistoryMergeTagChange={item.ignoreHistoryMergeTagChange}
+            />
           ))}
         {children}
       </LexicalComposer>

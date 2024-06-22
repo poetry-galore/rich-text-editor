@@ -13,7 +13,7 @@ const meta = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <div className="relative h-[500px] container">
+      <div className="relative h-[600px] w-[900px] mx-auto">
         <Story />
       </div>
     ),
@@ -52,11 +52,20 @@ export const NotEditable: Story = {
 };
 
 /**
- * Passing onChange prop
+ * Passing onEditorChange prop
  */
-export const RegisterOnEditorChange: Story = {
+export const OnEditorChange: Story = {
   args: {
-    onEditorChange: [fn()],
+    onEditorChange: [{ onChange: fn() }],
+  },
+};
+
+/**
+ * Passing onEditorChange prop with the ignoreSelectionChange set to true
+ */
+export const OnEditorChangeWithIgnoreSelection: Story = {
+  args: {
+    onEditorChange: [{ onChange: fn(), ignoreSelectionChange: true }],
   },
 };
 
@@ -75,6 +84,6 @@ export const PassSetEditorStateProp: Story = {
 export const OnEditorChangeAndSetEditorChange: Story = {
   args: {
     setEditorState: fn(),
-    onEditorChange: [fn()],
+    onEditorChange: [{ onChange: fn() }],
   },
 };

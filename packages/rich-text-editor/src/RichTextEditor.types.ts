@@ -24,11 +24,15 @@ interface Props {
    * @param editor The lexical editor
    * @param tags
    */
-  onEditorChange?: ((
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>,
-  ) => void)[];
+  onEditorChange?: {
+    onChange: (
+      editorState: EditorState,
+      editor: LexicalEditor,
+      tags: Set<string>,
+    ) => void;
+    ignoreSelectionChange?: boolean;
+    ignoreHistoryMergeTagChange?: boolean;
+  }[];
   /**
    * React state update function for setting the editor state.
    * Updates the state value to the json string of the contents.
