@@ -15,6 +15,8 @@ import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
 import "./RichTextEditor.css";
 
+import { cn } from "./lib/utils";
+
 // Custom plugins
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 
@@ -48,7 +50,7 @@ function RichTextEditor({
 
   const customContentEditable = useMemo(() => {
     return (
-      <ContentEditable className="w-full min-h-full p-2 focus:outline-none" />
+      <ContentEditable className="w-full min-h-[200px] p-2 focus:outline-none" />
     );
   }, []);
 
@@ -69,17 +71,18 @@ function RichTextEditor({
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
   };
 
-  rest.className = rest.className
-    ? rest.className
-    : "w-full h-full text-black dark:text-slate-100";
+  rest.className = cn(
+    "max-w-4xl h-full text-black dark:text-slate-100 rounded-lg",
+    rest.className,
+  );
 
   return (
     <div {...rest}>
       <LexicalComposer initialConfig={initialConfig}>
-        <div className="relative w-full min-h-full flex flex-col mt-10 border rounded-lg border-slate-400 bg-white dark:bg-slate-900 dark:border-slate-700">
+        <div className="relative w-full max-w-4xl min-h-full flex flex-col mt-10 rounded-xl border border-gray-300 font-normal leading-5 bg-inherit dark:bg-inherit dark:border-slate-800">
           {/* Toolbar Here */}
           <ToolbarPlugin />
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full rounded-b-lg border-opacity-5">
             <RichTextPlugin
               contentEditable={customContentEditable}
               placeholder={customPlaceholder}
