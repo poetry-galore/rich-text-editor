@@ -59,7 +59,7 @@ function RichTextEditor({
       <div className="absolute top-2 left-2 text-slate-500 text-muted-foreground pointer-events-none">
         {placeholderText}
       </div>
-    );
+    );border-opacity-20
   }, [placeholderText]);
 
   const initialConfig = {
@@ -72,17 +72,17 @@ function RichTextEditor({
   };
 
   rest.className = cn(
-    "max-w-4xl h-full text-black dark:text-slate-100 rounded-lg",
+    "max-w-4xl h-full text-black dark:text-slate-100 rounded-xl bg-inherit dark:bg-inherit",
     rest.className,
   );
 
   return (
     <div {...rest}>
       <LexicalComposer initialConfig={initialConfig}>
-        <div className="relative w-full max-w-4xl min-h-full flex flex-col mt-10 rounded-xl border border-gray-300 font-normal leading-5 bg-inherit dark:bg-inherit dark:border-slate-800">
+        <div className="relative w-full min-h-full flex flex-col font-normal leading-5 rounded-xl bg-inherit dark:bg-inherit">
           {/* Toolbar Here */}
           <ToolbarPlugin />
-          <div className="relative w-full h-full rounded-b-lg border-opacity-5">
+          <div className="relative w-full">
             <RichTextPlugin
               contentEditable={customContentEditable}
               placeholder={customPlaceholder}
