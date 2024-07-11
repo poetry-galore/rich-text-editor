@@ -59,7 +59,7 @@ function RichTextEditor({
       <div className="absolute top-2 left-2 text-slate-500 text-muted-foreground pointer-events-none">
         {placeholderText}
       </div>
-    );border-opacity-20
+    );
   }, [placeholderText]);
 
   const initialConfig = {
