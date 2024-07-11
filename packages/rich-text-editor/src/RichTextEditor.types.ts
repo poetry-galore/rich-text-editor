@@ -1,5 +1,4 @@
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
-import { CustomEditorState } from "./composables/useCustomEditorState";
 import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
 
 interface Props {
@@ -31,5 +30,3 @@ interface Props {
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
   React.AllHTMLAttributes<HTMLDivElement>;
-
-export { CustomEditorState };

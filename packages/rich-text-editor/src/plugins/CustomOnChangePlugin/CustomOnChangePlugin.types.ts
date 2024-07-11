@@ -1,5 +1,5 @@
 import { EditorState, LexicalEditor } from "lexical";
-import { CustomEditorState } from "@/RichTextEditor.types";
+import { CustomEditorState } from "../../composables/useCustomEditorState";
 
 export interface CustomOnChangePluginProps {
   /**

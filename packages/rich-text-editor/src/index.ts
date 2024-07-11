@@ -1,4 +1,4 @@
-import { CustomEditorState } from "./RichTextEditor.types";
+import { CustomEditorState } from "./composables/useCustomEditorState";
 
 export { default } from "./RichTextEditor";
 export { CustomEditorState };
