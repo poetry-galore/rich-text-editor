@@ -21,6 +21,7 @@ import { cn } from "./lib/utils";
 // Custom plugins
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
+import IsEmptyPlugin from "./plugins/IsEmptyPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -39,6 +40,7 @@ function RichTextEditor({
   onEditorChange,
   setEditorStateJSON,
   setEditorStateHTML,
+  setIsEmpty,
   children,
   ...rest
 }: RichTextEditorProps) {
@@ -123,6 +125,7 @@ function RichTextEditor({
         {initialEditorState && (
           <HTMLPlugin initialEditorState={initialEditorState} />
         )}
+        {setIsEmpty && <IsEmptyPlugin setIsEmpty={setIsEmpty} />}
         {children}
       </LexicalComposer>
     </div>

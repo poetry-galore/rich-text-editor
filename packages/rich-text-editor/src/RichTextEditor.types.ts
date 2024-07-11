@@ -53,6 +53,17 @@ interface Props {
    * <RichTextEditor setEditorStateHTML={setEditorStateHTML} />
    */
   setEditorStateHTML?: React.Dispatch<React.SetStateAction<string>>;
+
+  /**
+   * React state update function for setting whether the is empty.
+   * Updates the state value to whether the editor is empty.
+   *
+   * @example
+   * const [isEmpty, setIsEmpty] = useState<boolean>()
+   *
+   * <RichTextEditor setIsEmpty={setIsEmpty} />
+   */
+  setIsEmpty?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
