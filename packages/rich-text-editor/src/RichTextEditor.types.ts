@@ -1,5 +1,4 @@
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
-import { EditorState, LexicalEditor } from "lexical";
 import { CustomEditorState } from "./composables/useCustomEditorState";
 import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
 
@@ -28,37 +27,6 @@ interface Props {
    * @param tags
    */
   onEditorChange?: CustomOnChangePluginProps[];
-  /**
-   * React state update function for setting the editor state.
-   * Updates the state value to the json string of the contents.
-   *
-   * @example
-   * const [editorState, setEditorState] = useState<string>()
-   *
-   * <RichTextEditor setEditorState={setEditorState} />
-   */
-  setEditorStateJSON?: React.Dispatch<React.SetStateAction<string>>;
-  /**
-   * React state update function for setting the editor state.
-   * Updates the state value to the html string of the contents.
-   *
-   * @example
-   * const [editorStateHTML, setEditorStateHTML] = useState<string>()
-   *
-   * <RichTextEditor setEditorStateHTML={setEditorStateHTML} />
-   */
-  setEditorStateHTML?: React.Dispatch<React.SetStateAction<string>>;
-
-  /**
-   * React state update function for setting whether the is empty.
-   * Updates the state value to whether the editor is empty.
-   *
-   * @example
-   * const [isEmpty, setIsEmpty] = useState<boolean>()
-   *
-   * <RichTextEditor setIsEmpty={setIsEmpty} />
-   */
-  setIsEmpty?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &

@@ -80,33 +80,6 @@ export const OnEditorChangeWithIgnoreSelection: Story = {
 };
 
 /**
- * Passing setEditorStateJSON prop
- */
-export const PassSetEditorStateJSONProp: Story = {
-  args: {
-    setEditorStateJSON: fn(),
-  },
-};
-
-/**
- * Passing setEditorStateHTML prop
- */
-export const PassSetEditorStateHTMLProp: Story = {
-  args: {
-    setEditorStateHTML: fn(),
-  },
-};
-
-/**
- * Passing setIsEmpty prop
- */
-export const PassSetIsEmptyProp: Story = {
-  args: {
-    setIsEmpty: fn(),
-  },
-};
-
-/**
  * Passing setIsEmpty prop
  */
 export const PassOnChange: Story = {
@@ -120,8 +93,6 @@ export const PassOnChange: Story = {
  */
 export const OnEditorChangeAndSetEditorState: Story = {
   args: {
-    setEditorStateJSON: fn(),
-    setEditorStateHTML: fn(),
     onEditorChange: [{ onChange: fn() }],
   },
 };
