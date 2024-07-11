@@ -1,8 +1,18 @@
-import { EditorState, LexicalEditor } from "lexical";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useEffect, useLayoutEffect } from "react";
 
-import useCustomEditorState from "@/composables/useCustomEditorState";
 import { CustomOnChangePluginProps } from "./CustomOnChangePlugin.types";
+import useCustomEditorState from "@/composables/useCustomEditorState";
+
+const CAN_USE_DOM =
+  typeof window !== "undefined" &&
+  typeof window.document !== "undefined" &&
+  typeof window.document.createElement !== "undefined";
+
+// This workaround is no longer necessary in React 19,
+// but we currently support React >=17.x
+// https://github.com/facebook/react/pull/26395
+const useLayoutEffectImpl = CAN_USE_DOM ? useLayoutEffect : useEffect;
 
 /**
  * Custom plugin for registering callbacks to be called on editor
@@ -13,21 +23,34 @@ export default function CustomOnChangePlugin({
   ignoreHistoryMergeTagChange,
   ignoreSelectionChange,
 }: CustomOnChangePluginProps) {
-  function onChangeFn(
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>,
-  ) {
-    const customEditorState = useCustomEditorState(editor, editorState);
+  const [editor] = useLexicalComposerContext();
 
-    onChange(editorState, editor, tags, customEditorState);
-  }
+  useLayoutEffectImpl(() => {
+    if (onChange) {
+      return editor.registerUpdateListener(
+        ({
+          editorState,
+          dirtyElements,
+          dirtyLeaves,
+          prevEditorState,
+          tags,
+        }) => {
+          if (
+            (ignoreSelectionChange &&
+              dirtyElements.size === 0 &&
+              dirtyLeaves.size === 0) ||
+            (ignoreHistoryMergeTagChange && tags.has("history-merge")) ||
+            prevEditorState.isEmpty()
+          ) {
+            return;
+          }
+          const customEditorState = useCustomEditorState(editor, editorState);
 
-  return (
-    <OnChangePlugin
-      onChange={onChangeFn}
-      ignoreHistoryMergeTagChange={ignoreHistoryMergeTagChange}
-      ignoreSelectionChange={ignoreSelectionChange}
-    />
-  );
+          onChange(editorState, editor, tags, customEditorState);
+        }
+      );
+    }
+  }, [editor, ignoreHistoryMergeTagChange, ignoreSelectionChange, onChange]);
+
+  return null;
 }
