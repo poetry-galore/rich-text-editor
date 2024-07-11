@@ -20,6 +20,7 @@ import { cn } from "./lib/utils";
 
 // Custom plugins
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
+import HTMLPlugin from "./plugins/HTMLPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -119,6 +120,9 @@ function RichTextEditor({
               ignoreHistoryMergeTagChange={item.ignoreHistoryMergeTagChange}
             />
           ))}
+        {initialEditorState && (
+          <HTMLPlugin initialEditorState={initialEditorState} />
+        )}
         {children}
       </LexicalComposer>
     </div>

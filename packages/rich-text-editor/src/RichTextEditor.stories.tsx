@@ -52,6 +52,16 @@ export const NotEditable: Story = {
 };
 
 /**
+ * Load editor state from html string.
+ */
+export const LoadEditorStateFromHTMLString: Story = {
+  args: {
+    initialEditorState:
+      '<p dir="ltr"><span style="white-space: pre-wrap;">Can I have that </span></p><p dir="ltr"><b><strong class="font-bold" style="white-space: pre-wrap;">Looking at the same place</strong></b></p><p dir="ltr"><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">Can</strong></b></i></p>',
+  },
+};
+
+/**
  * Passing onEditorChange prop
  */
 export const OnEditorChange: Story = {
