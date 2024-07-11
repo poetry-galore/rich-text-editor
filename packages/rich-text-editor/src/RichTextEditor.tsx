@@ -19,6 +19,7 @@ import "./RichTextEditor.css";
 import { cn } from "./lib/utils";
 
 // Custom plugins
+import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
 import IsEmptyPlugin from "./plugins/IsEmptyPlugin";
@@ -49,7 +50,7 @@ function RichTextEditor({
    * setEditorStateHTML functions in the parent to the json and html
    * string of the contents respectively.
    */
-  function onChange(editorState: EditorState, editor: LexicalEditor) {
+  function onChangeFn(editorState: EditorState, editor: LexicalEditor) {
     const editorStateJSON = editorState.toJSON();
 
     // Set the JSON string
@@ -111,11 +112,11 @@ function RichTextEditor({
         {/** Other plugins */}
         <ListPlugin />
         {(setEditorStateJSON || setEditorStateHTML) && (
-          <OnChangePlugin ignoreSelectionChange={true} onChange={onChange} />
+          <OnChangePlugin ignoreSelectionChange={true} onChange={onChangeFn} />
         )}
         {onEditorChange &&
           onEditorChange.map((item, index) => (
-            <OnChangePlugin
+            <CustomOnChangePlugin
               key={index}
               onChange={item.onChange}
               ignoreSelectionChange={item.ignoreSelectionChange}

@@ -107,6 +107,15 @@ export const PassSetIsEmptyProp: Story = {
 };
 
 /**
+ * Passing setIsEmpty prop
+ */
+export const PassOnChange: Story = {
+  args: {
+    onChange: fn(),
+  },
+};
+
+/**
  * Passing setEditorStateJSON, setEditorStateHTML and onEditorChange props
  */
 export const OnEditorChangeAndSetEditorState: Story = {

@@ -1,5 +1,7 @@
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
 import { EditorState, LexicalEditor } from "lexical";
+import { CustomEditorState } from "./composables/useCustomEditorState";
+import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
 
 interface Props {
   /**
@@ -20,19 +22,12 @@ interface Props {
    * If you want to get the json value of the editor contents,
    * use `setEditorState` prop instead of this.
    *
+   * @param customEditorState Custom Editor state
    * @param editorState Current state of the editor
    * @param editor The lexical editor
    * @param tags
    */
-  onEditorChange?: {
-    onChange: (
-      editorState: EditorState,
-      editor: LexicalEditor,
-      tags: Set<string>,
-    ) => void;
-    ignoreSelectionChange?: boolean;
-    ignoreHistoryMergeTagChange?: boolean;
-  }[];
+  onEditorChange?: CustomOnChangePluginProps[];
   /**
    * React state update function for setting the editor state.
    * Updates the state value to the json string of the contents.
@@ -68,3 +63,5 @@ interface Props {
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
   React.AllHTMLAttributes<HTMLDivElement>;
+
+export { CustomEditorState };
