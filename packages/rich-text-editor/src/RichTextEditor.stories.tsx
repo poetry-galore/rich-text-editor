@@ -70,20 +70,30 @@ export const OnEditorChangeWithIgnoreSelection: Story = {
 };
 
 /**
- * Passing setEditorState prop
+ * Passing setEditorStateJSON prop
  */
-export const PassSetEditorStateProp: Story = {
+export const PassSetEditorStateJSONProp: Story = {
   args: {
-    setEditorState: fn(),
+    setEditorStateJSON: fn(),
   },
 };
 
 /**
- * Passing setEditorState and onEditorChange props
+ * Passing setEditorStateHTML prop
  */
-export const OnEditorChangeAndSetEditorChange: Story = {
+export const PassSetEditorStateHTMLProp: Story = {
   args: {
-    setEditorState: fn(),
+    setEditorStateHTML: fn(),
+  },
+};
+
+/**
+ * Passing setEditorStateJSON, setEditorStateHTML and onEditorChange props
+ */
+export const OnEditorChangeAndSetEditorState: Story = {
+  args: {
+    setEditorStateJSON: fn(),
+    setEditorStateHTML: fn(),
     onEditorChange: [{ onChange: fn() }],
   },
 };

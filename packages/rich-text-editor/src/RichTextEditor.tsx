@@ -8,8 +8,9 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { ListItemNode, ListNode } from "@lexical/list";
-import { EditorState } from "lexical";
+import { EditorState, LexicalEditor } from "lexical";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { $generateHtmlFromNodes } from "@lexical/html";
 
 import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
@@ -35,17 +36,29 @@ function RichTextEditor({
   editable = true,
   initialEditorState,
   onEditorChange,
-  setEditorState,
+  setEditorStateJSON,
+  setEditorStateHTML,
   children,
   ...rest
 }: RichTextEditorProps) {
   /**
-   * Updates the editor state value mapped to the setEditorState function
-   * in the parent to the json string of the contents.
+   * Updates the editor state values mapped to the setEditorStateJSON and
+   * setEditorStateHTML functions in the parent to the json and html
+   * string of the contents respectively.
    */
-  function onChange(editorState: EditorState) {
+  function onChange(editorState: EditorState, editor: LexicalEditor) {
     const editorStateJSON = editorState.toJSON();
-    setEditorState && setEditorState(JSON.stringify(editorStateJSON));
+
+    // Set the JSON string
+    setEditorStateJSON && setEditorStateJSON(JSON.stringify(editorStateJSON));
+
+    // Set the HTML string
+    if (setEditorStateHTML) {
+      editorState.read(() => {
+        const htmlString = $generateHtmlFromNodes(editor, null);
+        setEditorStateHTML(htmlString);
+      });
+    }
   }
 
   const customContentEditable = useMemo(() => {
@@ -94,7 +107,7 @@ function RichTextEditor({
         </div>
         {/** Other plugins */}
         <ListPlugin />
-        {setEditorState && (
+        {(setEditorStateJSON || setEditorStateHTML) && (
           <OnChangePlugin ignoreSelectionChange={true} onChange={onChange} />
         )}
         {onEditorChange &&

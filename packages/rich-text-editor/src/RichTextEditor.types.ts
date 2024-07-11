@@ -42,7 +42,17 @@ interface Props {
    *
    * <RichTextEditor setEditorState={setEditorState} />
    */
-  setEditorState?: React.Dispatch<React.SetStateAction<string>>;
+  setEditorStateJSON?: React.Dispatch<React.SetStateAction<string>>;
+  /**
+   * React state update function for setting the editor state.
+   * Updates the state value to the html string of the contents.
+   *
+   * @example
+   * const [editorStateHTML, setEditorStateHTML] = useState<string>()
+   *
+   * <RichTextEditor setEditorStateHTML={setEditorStateHTML} />
+   */
+  setEditorStateHTML?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
