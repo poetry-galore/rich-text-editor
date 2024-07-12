@@ -1,0 +1,56 @@
+{
+  "name": "@poetry-galore/utils",
+  "version": "0.0.1",
+  "description": "Utility package for the rich text editor",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**",
+    "src/**/*.@(ts|tsx|js|jsx)",
+    "!.storybook/*",
+    "!**/*.stories.@(ts|tsx|js|jsx)",
+    "!**/*.test.@(ts|tsx|js|jsx)",
+    "!src/**/*.mdx"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollup": "rollup -c --bundleConfigAsCjs",
+    "format:write": "prettier --write \"**/*.{ts,tsx}\" --cache",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\" --cache",
+    "pub:beta": "npm run rollup && npm publish --tag beta --access public",
+    "pub:release": "npm run rollup && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poetry-galore/rich-text-editor.git",
+    "directory": "packages/utils"
+  },
+  "author": "Brian Kimathi <bryo.kim1@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/poetry-galore/rich-text-editor/issues"
+  },
+  "homepage": "https://github.com/poetry-galore/rich-text-editor#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/poetry-galore"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.14.1",
+    "autoprefixer": "^10.4.19",
+    "prettier": "3.3.1",
+    "rollup": "^4.18.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@lexical/html": "^0.16.1",
+    "lexical": "^0.16.1"
+  }
+}
