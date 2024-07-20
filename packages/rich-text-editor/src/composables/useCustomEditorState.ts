@@ -11,14 +11,14 @@ import {
 
 export class CustomEditorState {
   /** The lexical editor */
-  #editor: LexicalEditor;
+  editor: LexicalEditor;
 
   /** Editor State */
-  #editorState: EditorState;
+  editorState: EditorState;
 
   constructor(editor: LexicalEditor, editorState: EditorState) {
-    this.#editor = editor;
-    this.#editorState = editorState;
+    this.editor = editor;
+    this.editorState = editorState;
   }
 
   /**
@@ -27,7 +27,7 @@ export class CustomEditorState {
    * @returns JSON value of the editor state.
    */
   toJSON() {
-    return this.#editorState.toJSON();
+    return this.editorState.toJSON();
   }
 
   /**
@@ -38,8 +38,8 @@ export class CustomEditorState {
   toHTML() {
     let htmlString: string = "";
 
-    this.#editorState.read(() => {
-      htmlString = $generateHtmlFromNodes(this.#editor, null);
+    this.editorState.read(() => {
+      htmlString = $generateHtmlFromNodes(this.editor, null);
     });
 
     return htmlString;
@@ -83,7 +83,7 @@ export class CustomEditorState {
       });
     }
 
-    return $isEmpty(this.#editorState);
+    return $isEmpty(this.editorState);
   }
 }
 
