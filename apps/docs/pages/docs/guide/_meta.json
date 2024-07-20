@@ -1,4 +1,5 @@
 {
   "set-editor-state": "Setting Initial Editor State",
-  "get-editor-state": "Getting Editor State"
+  "get-editor-state": "Getting Editor State",
+  "editor-is-empty": "Check Editor Is Empty"
 }

@@ -1,0 +1,39 @@
+import { Callout } from "nextra/components";
+
+# Check Editor Is Empty
+
+Checking if the editor is empty can be done through the [`onEditorChange`](/docs/props.mdx#oneditorchange)
+prop by providing a callback that calls the `isEmpty(){:ts}` method of the `customEditorState` argument.
+The method returns `true{:ts}` if the ediror is empty, else `false{:ts}`.
+
+<Callout type={"info"}>
+The `isEmpty(){:ts}` method takes an editor with whitespace only to be empty.
+</Callout>
+
+```tsx
+import { useEffect, useState } from "react";
+
+import RichTextEditor from "@poetry-galore/rich-text-editor";
+import type { CustomEditorState } from "@poetry-galore/types";
+
+export default function Editor() {
+  const [isEmpty, setIsEmpty] = useState<boolean>(true);
+
+  // Called everytime an update happens in the editor
+  function onChange(customEditorState: CustomEditorState) {
+    setIsEmpty(customEditorState.isEmpty());
+  }
+
+  useEffect(() => {
+    console.log(isEmpty);
+  }, [isEmpty]);
+
+  return (
+    <div className="container">
+      <RichTextEditor
+        onEditorChange={[{ onChange, ignoreSelectionChange: true }]}
+      />
+    </div>
+  );
+}
+```

@@ -1,12 +1,21 @@
+import { Steps } from "nextra/components";
+
 # Set Initial Editor State
 
 If you have an already saved editor state and you want to reload
 the state in the editor, you can pass the editor state as a string
 to the [`initialEditorState`](/docs/props.mdx#initialeditorstate) prop.
 
-Example of initial editor state:
+- [Load from JSON](#loading-from-a-json-string)
+- [Load from HTML](#loading-from-a-html-string)
 
-```js copy filename="initial_editor_state.js"
+## Loading from a JSON string
+
+<Steps>
+
+### Example of initial editor state as a JavaScript object:
+
+```js copy filename="initial_editor_state_json.js"
 export const InitialEditorState = {
   root: {
     children: [
@@ -39,11 +48,11 @@ export const InitialEditorState = {
 };
 ```
 
-Import the editor state and stringify it, and pass it to the `initialEditorState` prop.
+### Import the editor state and stringify it, and pass it to the `initialEditorState` prop.
 
 ```tsx {2, 5, 9} copy filename="components/Editor.tsx"
 import RichTextEditor from "@poetry-galore/rich-text-editor";
-import { InitialEditorState } from "../initial_editor_state";
+import { InitialEditorState } from "../initial_editor_state_json";
 
 export default function Editor() {
   const initialEditorStateString = JSON.stringify(InitialEditorState);
@@ -55,3 +64,36 @@ export default function Editor() {
   );
 }
 ```
+
+</Steps>
+
+## Loading from a HTML string
+
+<Steps>
+
+### Example of initial editor state as a JavaScript object:
+
+```ts copy filename="initial_editor_state_html.js"
+export const IntialEditorState = `\
+<p dir="ltr"><span style="white-space: pre-wrap;">Can I have that </span></p>\
+<p dir="ltr"><b><strong class="font-bold" style="white-space: pre-wrap;">Looking at the same place</strong></b></p>\
+<p dir="ltr"><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">Can</strong></b></i></p>
+`;
+```
+
+### Import the editor state and pass it to the `initialEditorState` prop.
+
+```tsx {2, 7} copy filename="components/Editor.tsx"
+import RichTextEditor from "@poetry-galore/rich-text-editor";
+import { InitialEditorState } from "../initial_editor_state_html";
+
+export default function Editor() {
+  return (
+    <div className="container">
+      <RichTextEditor initialEditorState={InitialEditorState} />
+    </div>
+  );
+}
+```
+
+</Steps>

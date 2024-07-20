@@ -1,4 +1,4 @@
-import { Steps, Tabs } from "nextra/components";
+import { Callout, Steps, Tabs } from "nextra/components";
 
 # Getting Started
 
@@ -7,11 +7,16 @@ import { Steps, Tabs } from "nextra/components";
 
 Install the `@poetry-galore/rich-text-editor` package.
 
+<Callout type={"info"}>
+  For TypeScript definitions, install `@poetry-galore/types`. Recommended for
+  those using TypeScript.
+</Callout>
+
 <Tabs items={['npm']}>
   <Tabs.Tab>
 
 ```bash copy
-npm install @poetry-galore/rich-text-editor
+npm install @poetry-galore/rich-text-editor @poetry-galore/types
 ```
 
   </Tabs.Tab>
@@ -24,26 +29,31 @@ You can now import `RichTextEditor` and use it in your project.
 Create a component for your editor:
 
 ```tsx copy filename="components/editor.tsx"
+import { useEffect, useState } from "react";
+
 import RichTextEditor from "@poetry-galore/rich-text-editor";
+import type { CustomEditorState } from "@poetry-galore/types";
 
 function Editor() {
-  // State variable to store the editor content as json string
+  // State variable to store the editor content as JSON
   // so that it can be saved or used as you'd like.
-  const [editorState, setEditorState] = useState<string>("");
+  const [editorStateJSON, setEditorStateJSON] = useState<any>();
 
   useEffect(() => {
-    // Console log the json string of the editor content.
-    console.log(editorState);
+    console.log(editorStateJSON);
     // You can do other stuff here like saving the contents
-  }, [editorState]);
+  }, [editorStateJSON]);
+
+  // To be called when an update happens in the editor
+  function onChange(customEditorState: CustomEditorState) {
+    setEditorStateJSON(customEditorState.toJSON());
+  }
 
   return (
-    <div className="container">
-      <RichTextEditor
-        placeholderText="Start writing ..."
-        setEditorState={setEditorState}
-      />
-    </div>
+    <RichTextEditor
+      placeholderText="Start writing ..."
+      onEditorChange={[{ onChange, ignoreSelectionChange: true }]}
+    />
   );
 }
 

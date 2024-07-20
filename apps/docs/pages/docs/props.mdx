@@ -1,4 +1,4 @@
-import { Tabs } from "nextra/components";
+import { Callout, Tabs } from "nextra/components";
 
 import { OptionTable } from "/components/table";
 
@@ -41,6 +41,12 @@ Also toolbar is disabled and the formatting or redo/undo options are not availab
 
 ### `initialEditorState`
 
+<Callout type={"info"}>
+  It is recommended that the data being provided as `initialEditorState` be from
+  a previous saved Lexical Editor State. Checkout [Getting Editor
+  State](./guide/get-editor-state.mdx) for ways on how to get the editor state.
+</Callout>
+
 <OptionTable
   options={[
     [
@@ -52,8 +58,7 @@ Also toolbar is disabled and the formatting or redo/undo options are not availab
   ]}
 />
 
-A string of the editor state set by the `setEditorState` prop can be passed to this prop
-to restore the saved editor state.
+Passing a JSON string of the editor state.
 
 <Tabs items={['Editor.tsx', 'InitialEditorState.ts']}>
     <Tabs.Tab>
@@ -105,32 +110,12 @@ to restore the saved editor state.
 
 </Tabs>
 
-### `setEditorState`
-
-<OptionTable
-  options={[
-    [
-      "setEditorState",
-      `React.Dispatch<
-  React.SetStateAction<string>
->  | undefined`,
-      "undefined",
-      "React state update function for setting the editor state.",
-    ],
-  ]}
-/>
-
-Should be a state update function that is returned by `useState<string>(""){:tsx}`.
-
-In the case below, the `editorState` state value is updated whenever the editor updates.
+An HTML string can also be passed as `initialEditorState`.
 
 ```tsx
-import { useState } from "react";
+const HTMLString = `<p>This is me</p>`
 
-export default function Editor() {
-  const [editorState, setEditorState] = useState<string>("");
-  return <RichTextEditor setEditorState={setEditorState} />;
-}
+<RichTextEditor initialEditorState={HTMLString} />
 ```
 
 ### `onEditorChange`
@@ -142,9 +127,8 @@ An array of objects with the following properties:
     [
       "onChange",
       `(
-  editorState: EditorState,
-  editor: LexicalEditor,
-  tags: Set<string>,
+  customEditorState: CustomEditorState,
+  tags?: Set<string>,
 ) => void;
     `,
       "",
@@ -180,8 +164,8 @@ The callbacks can perform different tasks and can be used to extend the function
     ```tsx
     export default function Editor() {
       // Console logs the editor state after every update
-      function onChange(editorState) {
-          console.log(editorState.toJSON());
+      function onChange(customEditorState) {
+          console.log(customEditorState.toJSON());
       }
 
       return <RichTextEditor onEditorChange={[{onChange}]} />
@@ -193,8 +177,8 @@ The callbacks can perform different tasks and can be used to extend the function
 
     ```tsx
     export default function Editor() {
-        function onChange(editorState) {
-            console.log(editorState.toJSON());
+        function onChange(customEditorState) {
+            console.log(customEditorState.toJSON());
         }
 
         const onEditorChange = [{onChange, ignoreSelectionChange: true}];
@@ -209,12 +193,12 @@ The callbacks can perform different tasks and can be used to extend the function
 
     ```tsx
     export default function Editor() {
-        function onChange1(editorState) {
-            console.log(`onChange1: ${editorState.toJSON()}`);
+        function onChange1(customEditorState) {
+            console.log(`onChange1: ${customEditorState.toJSON()}`);
         }
 
-        function onChange2(editorState) {
-            console.log(`onChange2: ${editorState.toJSON()}`);
+        function onChange2(customEditorState) {
+            console.log(`onChange2: ${customEditorState.toJSON()}`);
         }
 
         const onEditorChange = [

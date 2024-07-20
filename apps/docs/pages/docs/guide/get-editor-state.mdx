@@ -2,123 +2,39 @@ import { Steps } from "nextra/components";
 
 # Get Editor State
 
-There are currently two ways to get the editor state:
+You can access the editor state through callbacks passed to the
+[`onEditorChange`](/docs/props.mdx#oneditorchange) prop.
 
-1. Using the [`setEditorState`](/docs/props.mdx#seteditorstate) prop and passing a state update function to it.
-   The stateful value is set to the string of the JSON of the editor state.
-2. Creating your own callback to listen on changes in the editor and using the
-   editor state passed as a parameter to the callback. The callbacks can be registered
-   using the [`onEditorChange`](/docs/props.mdx#oneditorchange) prop.
-
-## Using `setEditorState` prop
-
-This method requires little effort to implement and will suffice for most purposes
-unless if you need a custom listener that gives you more access to the editor state
-and even the editor itself.
-
-> Selection change is ignored when using this method hence it does not cause the state value to change
-
-<Steps>
-
-### Create a state value
-
-Create a state value to hold the editor state string. Pass the returned update function to the
-`setEditorState` prop.
-
-```tsx {6, 14} copy filename="components/Editor.tsx"
-import { useEffect, useState } from "react";
-
-import RichTextEditor from "@poetry-galore/rich-text-editor";
-
-export default function Editor() {
-  const [editorState, setEditorState] = useState<string>("");
-
-  useEffect(() => {
-    console.log(editorState);
-  }, [editorState]);
-
-  return (
-    <div className="container">
-      <RichTextEditor setEditorState={setEditorState} />
-    </div>
-  );
-}
-```
-
-### Use the state value as preffered
-
-The `editorState` value can be used as needed. You can save it or
-use it in a form submit.
-
-```tsx {8-11} copy filename="components/Editor.tsx"
-import { useEffect, useState } from "react";
-
-import RichTextEditor from "@poetry-galore/rich-text-editor";
-
-export default function Editor() {
-  const [editorState, setEditorState] = useState<string>("");
-
-  useEffect(() => {
-    console.log(editorState);
-    // Save the editor state or submit
-  }, [editorState]);
-
-  return (
-    <div className="container">
-      <RichTextEditor setEditorState={setEditorState} />
-    </div>
-  );
-}
-```
-
-</Steps>
-
-Example of `editorState` set using this method:
-
-```json copy
-"{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Once upon a time\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}"
-```
-
-## Using `onEditorChange`
-
-In this method, you get to implement your own update listener that is passed the `editor`, `editorState` and `tags` parameters.
-You can do more than just getting the editor state using this method.
-
-The `onEditorChange` prop accepts an array of objects that contain callback to be triggered with options for configuring
-whether to ignore selection and history merge tag changes.
+The `customEditorState` parameter passed to the onChange callback provides `toJSON(){:ts}`
+and `toHTML(){:ts}` methods that return the esitor state in JSON and HTML respectively.
 
 ```ts filename="onEditorChange type"
 onEditorChange?: {
   onChange: (
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>,
+    customEditorState: CustomEditorState,
+    tags?: Set<string>,
   ) => void;
   ignoreSelectionChange?: boolean;
   ignoreHistoryMergeTagChange?: boolean;
 }[];
 ```
 
-> Currently you cannot ignore selection change. An update will ensure that you're able to choose
-> whether to ignore those changes or not.
-
-To achieve the same results as using the `setEditorState` prop, you can do this:
-
 <Steps>
 
 ### Create a callback to be triggered when changes occur
 
-```tsx {8-12} copy filename="components/Editor.tsx"
-import { EditorState } from "lexical";
-
+```tsx {5-13} copy filename="components/Editor.tsx"
 import RichTextEditor from "@poetry-galore/rich-text-editor";
+import type { CustomEditorState } from "@poetry-galore/types";
 
 export default function Editor() {
   // Called everytime an update happens in the editor
-  // Even selection triggers this function.
-  function onChange(editorState: EditorState) {
-    const editorStateJSON = editorState.toJSON();
+  function onChange(customEditorState: CustomEditorState) {
+    const editorStateJSON = customEditorState.toJSON();
+    const editorStateHTML = customEditorState.toHTML();
+
     console.log(JSON.stringify(editorStateJSON));
+    console.log(editorStateHTML);
     // You can save or submit the editor state
   }
 
@@ -137,17 +53,18 @@ export default function Editor() {
 The `ignoreSelectionChange` option is set to `true` to prevent the `onChange` callback
 from being called when a selection change occurs.
 
-```tsx {16} copy filename="components/Editor.tsx"
-import { EditorState } from "lexical";
-
+```tsx {18} copy filename="components/Editor.tsx"
 import RichTextEditor from "@poetry-galore/rich-text-editor";
+import type { CustomEditorState } from "@poetry-galore/types";
 
 export default function Editor() {
   // Called everytime an update happens in the editor
-  // Even selection triggers this function.
-  function onChange(editorState: EditorState) {
-    const editorStateJSON = editorState.toJSON();
+  function onChange(customEditorState: CustomEditorState) {
+    const editorStateJSON = customEditorState.toJSON();
+    const editorStateHTML = customEditorState.toHTML();
+
     console.log(JSON.stringify(editorStateJSON));
+    console.log(editorStateHTML);
     // You can save or submit the editor state
   }
 
