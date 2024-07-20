@@ -1,4 +1,3 @@
-import { EditorState, LexicalEditor } from "lexical";
 import { CustomEditorState } from "../../composables/useCustomEditorState";
 
 export interface CustomOnChangePluginProps {
@@ -6,15 +5,11 @@ export interface CustomOnChangePluginProps {
    * Callback triggered when the editor undergoes an update.
    *
    * @param customEditorState Custom Editor state
-   * @param editorState Current state of the editor
-   * @param editor The lexical editor
    * @param tags
    */
   onChange: (
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>,
-    customEditorState?: CustomEditorState,
+    customEditorState: CustomEditorState,
+    tags?: Set<string>,
   ) => void;
 
   /**

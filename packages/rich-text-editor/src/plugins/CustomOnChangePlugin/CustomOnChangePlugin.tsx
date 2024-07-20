@@ -46,7 +46,7 @@ export default function CustomOnChangePlugin({
           }
           const customEditorState = useCustomEditorState(editor, editorState);
 
-          onChange(editorState, editor, tags, customEditorState);
+          onChange(customEditorState, tags);
         }
       );
     }
