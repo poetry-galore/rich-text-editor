@@ -4,7 +4,10 @@ import * as lexical from "lexical";
 import { LexicalEditor, EditorState } from "lexical";
 
 export declare class CustomEditorState {
-  #private;
+  /** The lexical editor */
+  editor: LexicalEditor;
+  /** Editor State */
+  editorState: EditorState;
   constructor(editor: LexicalEditor, editorState: EditorState);
   /**
    * Get the JSON value of the editor
@@ -32,16 +35,9 @@ export interface CustomOnChangePluginProps {
    * Callback triggered when the editor undergoes an update.
    *
    * @param customEditorState Custom Editor state
-   * @param editorState Current state of the editor
-   * @param editor The lexical editor
    * @param tags
    */
-  onChange: (
-    editorState: EditorState,
-    editor: LexicalEditor,
-    tags: Set<string>,
-    customEditorState?: CustomEditorState,
-  ) => void;
+  onChange: (customEditorState: CustomEditorState, tags?: Set<string>) => void;
   /**
    * Whether to ignore the selection change
    */
@@ -52,7 +48,7 @@ export interface CustomOnChangePluginProps {
   ignoreHistoryMergeTagChange?: boolean;
 }
 
-interface Props {
+export interface Props {
   /**
    * Text to display before user inputs
    */
@@ -66,15 +62,33 @@ interface Props {
    */
   initialEditorState?: InitialEditorStateType;
   /**
-   * List of callbacks triggered when the editor undergoes an update.
+   * Array of objects with callbacks to be triggered when the editor updates.
    *
-   * If you want to get the json value of the editor contents,
-   * use `setEditorState` prop instead of this.
+   * Access the editor and editorState from the customEditorState argument
+   * passed to the onChange function.
    *
-   * @param customEditorState Custom Editor state
-   * @param editorState Current state of the editor
-   * @param editor The lexical editor
-   * @param tags
+   * @example
+   * // How to get the contents of the editor as JSON
+   * function Editor(){
+   *    // State variable to store the JSON value of the editor contents
+   *    const [editorStateJSON, setEditorStateJSON] = useState<any>("")
+   *
+   *    // Function to call when editor updates
+   *    function onChange(customEditorState: CustomEditorState, tags:Set<string>){
+   *      // Set the editorStateJSON to the JSON value
+   *      setEditorStateJSON(customEditorState.toJSON());
+   *
+   *      console.log(customEditorState.toHTML()) // Editor contents as a HTML string
+   *    }
+   *
+   *    useEffect(()=>{
+   *      console.log(editorStateJSON)
+   *    }, [editorStateJSON]);
+   *
+   *    return (
+   *      <RichTextEditor onEditorChange={[{onChange, ignoreSelectionChange: true}]} />
+   *    );
+   * }
    */
   onEditorChange?: CustomOnChangePluginProps[];
 }
