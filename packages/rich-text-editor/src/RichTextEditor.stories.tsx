@@ -57,7 +57,16 @@ export const NotEditable: Story = {
 export const LoadEditorStateFromHTMLString: Story = {
   args: {
     initialEditorState:
-      '<p dir="ltr"><span style="white-space: pre-wrap;">Can I have that </span></p><p dir="ltr"><b><strong class="font-bold" style="white-space: pre-wrap;">Looking at the same place</strong></b></p><p dir="ltr"><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">Can</strong></b></i></p>',
+      '<p dir="ltr"><span style="white-space: pre-wrap;">L</span><b><strong class="font-bold" style="white-space: pre-wrap;">o</strong></b><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">o</strong></b></i><u><i><b><strong class="font-bold italic underline" style="white-space: pre-wrap;">k</strong></b></i></u><u><b><strong class="font-bold underline" style="white-space: pre-wrap;">at</strong></b></u><u><span class="underline" style="white-space: pre-wrap;">me</span></u><span style="white-space: pre-wrap;">andtellme</span></p><p dir="ltr"><b><strong class="font-bold" style="white-space: pre-wrap;">What can you </strong></b><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">see?</strong></b></i></p>',
+  },
+};
+
+/**
+ * Load editor state from json string.
+ */
+export const LoadEditorStateFromJSONString: Story = {
+  args: {
+    initialEditorState: `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Rich Text Editor","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`,
   },
 };
 
@@ -66,7 +75,13 @@ export const LoadEditorStateFromHTMLString: Story = {
  */
 export const OnEditorChange: Story = {
   args: {
-    onEditorChange: [{ onChange: fn() }],
+    onEditorChange: [
+      {
+        onChange: (customEditorState) => {
+          console.log(customEditorState.toJSON());
+        },
+      },
+    ],
   },
 };
 
@@ -76,23 +91,5 @@ export const OnEditorChange: Story = {
 export const OnEditorChangeWithIgnoreSelection: Story = {
   args: {
     onEditorChange: [{ onChange: fn(), ignoreSelectionChange: true }],
-  },
-};
-
-/**
- * Passing setIsEmpty prop
- */
-export const PassOnChange: Story = {
-  args: {
-    onChange: fn(),
-  },
-};
-
-/**
- * Passing setEditorStateJSON, setEditorStateHTML and onEditorChange props
- */
-export const OnEditorChangeAndSetEditorState: Story = {
-  args: {
-    onEditorChange: [{ onChange: fn() }],
   },
 };
