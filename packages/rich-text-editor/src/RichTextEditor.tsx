@@ -22,6 +22,9 @@ import { cn } from "./lib/utils";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
+import { $generateNodesFromDOM } from "@lexical/html";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { ElementNode, RootNode } from "lexical";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -74,13 +77,13 @@ function RichTextEditor({
     theme: RichTextEditorTheme,
     onError,
     editable,
-    editorState: initialEditorStateIsHTML ? undefined : initialEditorState,
+    editorState: initialEditorStateIsHTML ? null : initialEditorState,
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
   };
 
   rest.className = cn(
     "max-w-4xl h-full text-black dark:text-slate-100 rounded-xl bg-inherit dark:bg-inherit",
-    rest.className,
+    rest.className
   );
 
   return (
