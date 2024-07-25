@@ -7,10 +7,7 @@ export interface CustomOnChangePluginProps {
    * @param customEditorState Custom Editor state
    * @param tags
    */
-  onChange: (
-    customEditorState: CustomEditorState,
-    tags?: Set<string>,
-  ) => void;
+  onChange: (customEditorState: CustomEditorState, tags?: Set<string>) => void;
 
   /**
    * Whether to ignore the selection change

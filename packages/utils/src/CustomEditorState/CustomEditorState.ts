@@ -11,7 +11,7 @@ import {
 
 /**
  * Class for utility functions on the editor state.
- * 
+ *
  * Must be used within the context of a lexical editor
  */
 export default class CustomEditorState {
