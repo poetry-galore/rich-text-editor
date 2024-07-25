@@ -22,9 +22,6 @@ import { cn } from "./lib/utils";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
-import { $generateNodesFromDOM } from "@lexical/html";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { ElementNode, RootNode } from "lexical";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
