@@ -18,7 +18,7 @@ export default function HTMLPlugin({
       const parser = new DOMParser();
       const dom = parser.parseFromString(
         initialEditorState.toString(),
-        "text/html"
+        "text/html",
       );
 
       // Once you have the DOM instance it's easy to generate LexicalNodes.
@@ -44,7 +44,7 @@ export default function HTMLPlugin({
       // Create new EditorState and set it in the Editor
       const _rootJSON = { root: rootJSON };
       const parsedEditorState = editor.parseEditorState(
-        JSON.stringify(_rootJSON)
+        JSON.stringify(_rootJSON),
       );
       editor.setEditorState(parsedEditorState, { tag: "history-merge" });
     });
