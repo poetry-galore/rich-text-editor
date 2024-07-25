@@ -47,7 +47,7 @@ export default function CustomOnChangePlugin({
           const customEditorState = useCustomEditorState(editor, editorState);
 
           onChange(customEditorState, tags);
-        }
+        },
       );
     }
   }, [editor, ignoreHistoryMergeTagChange, ignoreSelectionChange, onChange]);
