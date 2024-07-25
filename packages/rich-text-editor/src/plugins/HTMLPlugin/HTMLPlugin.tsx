@@ -1,4 +1,4 @@
-import { $getRoot, $insertNodes } from "lexical";
+import { ElementNode, RootNode } from "lexical";
 import { $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
@@ -22,13 +22,31 @@ export default function HTMLPlugin({
       );
 
       // Once you have the DOM instance it's easy to generate LexicalNodes.
-      const nodes = $generateNodesFromDOM(editor, dom);
+      const nodes = $generateNodesFromDOM(editor, dom) as ElementNode[];
 
-      // Select the root
-      $getRoot().select();
+      // RootNode to build the new EditorState from
+      const root = new RootNode();
+      const rootJSON = root.exportJSON();
 
-      // Insert them at a selection.
-      $insertNodes(nodes);
+      // Get JSON of each node and their children and build the
+      // JSON of the EditorState to load from.
+      nodes.forEach((node: ElementNode) => {
+        const nodeJSON = node.exportJSON();
+
+        node.getChildren().forEach((child) => {
+          const childJSON = child.exportJSON();
+          nodeJSON.children.push(childJSON);
+        });
+
+        rootJSON.children.push(nodeJSON);
+      });
+
+      // Create new EditorState and set it in the Editor
+      const _rootJSON = { root: rootJSON };
+      const parsedEditorState = editor.parseEditorState(
+        JSON.stringify(_rootJSON),
+      );
+      editor.setEditorState(parsedEditorState);
     });
   }
 
