@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import {
+  InitialConfigType,
+  LexicalComposer,
+} from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -52,12 +55,26 @@ function RichTextEditor({
     );
   }, [placeholderText]);
 
-  const initialConfig = {
+  /** Check if the initialEditorState is valid HTML so as to use the HTMLPlugin
+   * and avoid settting editorState in the {@link initialConfig}
+   */
+  const initialEditorStateIsHTML =
+    typeof initialEditorState === "string" &&
+    /(?:<[/][^<]+>)|(?:<[^<]+[/]>)/.test(initialEditorState);
+
+  if (!initialEditorStateIsHTML) {
+    // Check if the initialEditorState is valid JSON
+    initialEditorState &&
+      typeof initialEditorState === "string" &&
+      JSON.parse(initialEditorState);
+  }
+
+  const initialConfig: InitialConfigType = {
     namespace: "RichTextEditor",
     theme: RichTextEditorTheme,
     onError,
     editable,
-    initialEditorState,
+    editorState: initialEditorStateIsHTML ? undefined : initialEditorState,
     nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode],
   };
 
@@ -93,7 +110,7 @@ function RichTextEditor({
               ignoreHistoryMergeTagChange={item.ignoreHistoryMergeTagChange}
             />
           ))}
-        {initialEditorState && (
+        {initialEditorStateIsHTML && initialEditorState && (
           <HTMLPlugin initialEditorState={initialEditorState} />
         )}
         {children}
