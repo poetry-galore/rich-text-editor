@@ -1,4 +1,5 @@
-import { ElementNode, RootNode } from "lexical";
+import { useEffect, useRef } from "react";
+import { CLEAR_HISTORY_COMMAND, ElementNode, RootNode } from "lexical";
 import { $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
@@ -12,43 +13,53 @@ export default function HTMLPlugin({
 }: HTMLPluginProps): null {
   const [editor] = useLexicalComposerContext();
 
-  if (initialEditorState?.toString().startsWith("<")) {
-    editor.update(() => {
-      // In the browser you can use the native DOMParser API to parse the HTML string.
-      const parser = new DOMParser();
-      const dom = parser.parseFromString(
-        initialEditorState.toString(),
-        "text/html"
-      );
+  const isFirstRender = useRef(true);
 
-      // Once you have the DOM instance it's easy to generate LexicalNodes.
-      const nodes = $generateNodesFromDOM(editor, dom) as ElementNode[];
+  useEffect(() => {
+    // Set initialEditorState only on first render
+    if (isFirstRender && initialEditorState) {
+      isFirstRender.current = false;
 
-      // RootNode to build the new EditorState from
-      const root = new RootNode();
-      const rootJSON = root.exportJSON();
+      editor.update(() => {
+        // In the browser you can use the native DOMParser API to parse the HTML string.
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(
+          initialEditorState.toString(),
+          "text/html",
+        );
 
-      // Get JSON of each node and their children and build the
-      // JSON of the EditorState to load from.
-      nodes.forEach((node: ElementNode) => {
-        const nodeJSON = node.exportJSON();
+        // Once you have the DOM instance it's easy to generate LexicalNodes.
+        const nodes = $generateNodesFromDOM(editor, dom) as ElementNode[];
 
-        node.getChildren().forEach((child) => {
-          const childJSON = child.exportJSON();
-          nodeJSON.children.push(childJSON);
+        // RootNode to build the new EditorState from
+        const root = new RootNode();
+        const rootJSON = root.exportJSON();
+
+        // Get JSON of each node and their children and build the
+        // JSON of the EditorState to load from.
+        nodes.forEach((node: ElementNode) => {
+          const nodeJSON = node.exportJSON();
+
+          node.getChildren().forEach((child) => {
+            const childJSON = child.exportJSON();
+            nodeJSON.children.push(childJSON);
+          });
+
+          rootJSON.children.push(nodeJSON);
         });
 
-        rootJSON.children.push(nodeJSON);
-      });
+        // Create new EditorState and set it in the Editor
+        const _rootJSON = { root: rootJSON };
+        const parsedEditorState = editor.parseEditorState(
+          JSON.stringify(_rootJSON),
+        );
+        editor.setEditorState(parsedEditorState, { tag: "history-merge" });
 
-      // Create new EditorState and set it in the Editor
-      const _rootJSON = { root: rootJSON };
-      const parsedEditorState = editor.parseEditorState(
-        JSON.stringify(_rootJSON)
-      );
-      editor.setEditorState(parsedEditorState, { tag: "history-merge" });
-    });
-  }
+        // Clear the history added by this update.
+        editor.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined);
+      });
+    }
+  }, [isFirstRender]);
 
   return null;
 }
