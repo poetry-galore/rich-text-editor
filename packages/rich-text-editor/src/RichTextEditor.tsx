@@ -80,7 +80,7 @@ function RichTextEditor({
 
   rest.className = cn(
     "max-w-4xl h-full text-black dark:text-slate-100 rounded-xl bg-inherit dark:bg-inherit",
-    rest.className
+    rest.className,
   );
 
   return (
