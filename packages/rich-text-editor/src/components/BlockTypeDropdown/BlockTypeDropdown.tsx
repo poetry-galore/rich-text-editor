@@ -209,7 +209,7 @@ export default function BlockTypeDropdown() {
         }
       }}
     >
-      <SelectTrigger className="w-40 select-none">
+      <SelectTrigger className="w-40 h-9 select-none">
         <SelectValue placeholder="Block Type" />
       </SelectTrigger>
 
