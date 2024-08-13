@@ -82,6 +82,8 @@ export const OnEditorChange: Story = {
         },
       },
     ],
+    initialEditorState:
+      '<p dir="ltr"><span style="white-space: pre-wrap;">L</span><b><strong class="font-bold" style="white-space: pre-wrap;">o</strong></b><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">o</strong></b></i><u><i><b><strong class="font-bold italic underline" style="white-space: pre-wrap;">k</strong></b></i></u><u><b><strong class="font-bold underline" style="white-space: pre-wrap;">at</strong></b></u><u><span class="underline" style="white-space: pre-wrap;">me</span></u><span style="white-space: pre-wrap;">andtellme</span></p><p dir="ltr"><b><strong class="font-bold" style="white-space: pre-wrap;">What can you </strong></b><i><b><strong class="font-bold italic" style="white-space: pre-wrap;">see?</strong></b></i></p>',
   },
 };
 
