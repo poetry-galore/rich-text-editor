@@ -95,3 +95,9 @@ export const OnEditorChangeWithIgnoreSelection: Story = {
     onEditorChange: [{ onChange: fn(), ignoreSelectionChange: true }],
   },
 };
+
+export const WithFloatingMenu: Story = {
+  args: {
+    showFloatingMenu: true,
+  },
+};
