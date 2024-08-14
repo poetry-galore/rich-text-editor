@@ -40,12 +40,18 @@ function RichTextEditor({
   initialEditorState,
   onEditorChange,
   showFloatingMenu = false,
+  showToolbar = true,
   children,
   ...rest
 }: RichTextEditorProps) {
   const customContentEditable = useMemo(() => {
     return (
-      <ContentEditable className="w-full min-h-[200px] p-2 focus:outline-none" />
+      <ContentEditable
+        className={cn(
+          "w-full min-h-[200px] p-2 focus:outline-none",
+          !showToolbar && "min-h-full",
+        )}
+      />
     );
   }, []);
 
@@ -57,7 +63,8 @@ function RichTextEditor({
     );
   }, [placeholderText]);
 
-  /** Check if the initialEditorState is valid HTML so as to use the HTMLPlugin
+  /**
+   * Check if the initialEditorState is valid HTML so as to use the {@link HTMLPlugin}
    * and avoid setting editorState in the {@link initialConfig}
    */
   const initialEditorStateIsHTML =
@@ -88,10 +95,15 @@ function RichTextEditor({
   return (
     <div {...rest}>
       <LexicalComposer initialConfig={initialConfig}>
-        <div className="relative w-full min-h-full flex flex-col font-normal leading-5 rounded-xl bg-inherit dark:bg-inherit">
+        <div
+          className={cn(
+            "relative w-full min-h-full flex flex-col font-normal leading-5 rounded-xl bg-inherit dark:bg-inherit",
+            !showToolbar && "h-full",
+          )}
+        >
           {/* Toolbar Here */}
-          <ToolbarPlugin />
-          <div className="relative w-full">
+          {showToolbar && <ToolbarPlugin />}
+          <div className="relative w-full min-h-full">
             <RichTextPlugin
               contentEditable={customContentEditable}
               placeholder={customPlaceholder}

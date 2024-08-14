@@ -96,8 +96,21 @@ export const OnEditorChangeWithIgnoreSelection: Story = {
   },
 };
 
+/**
+ * showFloatingMenu is true
+ */
 export const WithFloatingMenu: Story = {
   args: {
+    showFloatingMenu: true,
+  },
+};
+
+/**
+ * showToolbar is false and showFloatingMenu is true
+ */
+export const WithoutToolbarWithFloatingMenu: Story = {
+  args: {
+    showToolbar: false,
     showFloatingMenu: true,
   },
 };
