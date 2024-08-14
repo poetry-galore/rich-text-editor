@@ -50,6 +50,12 @@ interface Props {
    * @default false
    */
   showFloatingMenu?: boolean;
+  /**
+   * Set to `false` to hide the toolbar
+   *
+   * @default true
+   */
+  showToolbar?: boolean;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
