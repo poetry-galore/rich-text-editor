@@ -1,5 +1,6 @@
 import { TextFormatType } from "lexical";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import React from "react";
 
 export type TextActionType = {
   /**
@@ -7,9 +8,11 @@ export type TextActionType = {
    */
   type: TextFormatType;
   /**
-   * The fontawesome icon to use
+   * Icon to use in the toggle of the action.
+   *
+   * Can be Fontawesome icon or a function that returns a JSX.Element
    */
-  icon: IconDefinition;
+  icon: IconDefinition | (() => React.JSX.Element);
   /**
    * Function used for setting the state of the format in the selection
    */

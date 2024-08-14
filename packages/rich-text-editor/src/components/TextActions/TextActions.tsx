@@ -10,16 +10,20 @@ import {
 } from "lexical";
 
 import {
-  faBold,
-  faItalic,
-  faUnderline,
-  faStrikethrough,
-  faCode,
   faHighlighter,
   faSubscript,
   faSuperscript,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  FontBoldIcon,
+  FontItalicIcon,
+  UnderlineIcon,
+  StrikethroughIcon,
+  CodeIcon,
+} from "@radix-ui/react-icons";
+
 import { Toggle } from "@/components/ui/toggle";
 
 import { TextActionType } from "./TextAction.types";
@@ -75,31 +79,31 @@ export default function TextActions() {
   const textFormats: TextActionType[] = [
     {
       type: "bold",
-      icon: faBold,
+      icon: () => <FontBoldIcon />,
       setter: setIsBold,
       isSet: isBold,
     },
     {
       type: "italic",
-      icon: faItalic,
+      icon: () => <FontItalicIcon />,
       setter: setIsItalic,
       isSet: isItalic,
     },
     {
       type: "underline",
-      icon: faUnderline,
+      icon: () => <UnderlineIcon />,
       setter: setIsUnderline,
       isSet: isUnderline,
     },
     {
       type: "strikethrough",
-      icon: faStrikethrough,
+      icon: () => <StrikethroughIcon />,
       setter: setIsStrikethrough,
       isSet: isStrikethrough,
     },
     {
       type: "code",
-      icon: faCode,
+      icon: () => <CodeIcon />,
       setter: setIsCode,
       isSet: isCode,
     },
@@ -139,9 +143,13 @@ export default function TextActions() {
               format.setter(pressed);
             }}
             disabled={!editor.isEditable()}
-            className="rounded-lg size-8"
+            className="rounded-lg"
           >
-            <FontAwesomeIcon icon={format.icon} />
+            {format.icon instanceof Function ? (
+              format.icon()
+            ) : (
+              <FontAwesomeIcon icon={format.icon} size={"sm"} />
+            )}
           </Toggle>
         );
       })}
