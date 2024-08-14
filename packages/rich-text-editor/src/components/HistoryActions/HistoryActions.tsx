@@ -49,6 +49,7 @@ export const HistoryActions = () => {
       <Button
         onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
         size={"sm"}
+        className="size-8"
         disabled={!canUndo}
         variant="ghost"
       >
@@ -57,6 +58,7 @@ export const HistoryActions = () => {
       <Button
         onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
         size={"sm"}
+        className="size-8"
         disabled={!canRedo}
         variant="ghost"
       >

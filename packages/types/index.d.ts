@@ -91,6 +91,12 @@ export interface Props {
    * }
    */
   onEditorChange?: CustomOnChangePluginProps[];
+  /**
+   * Set to `true` to show the floating menu on selection.
+   *
+   * @default false
+   */
+  showFloatingMenu?: boolean;
 }
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
   React.AllHTMLAttributes<HTMLDivElement>;
@@ -103,6 +109,7 @@ export declare function RichTextEditor({
   editable,
   initialEditorState,
   onEditorChange,
+  showFloatingMenu,
   children,
   ...rest
 }: RichTextEditorProps): react_jsx_runtime.JSX.Element;

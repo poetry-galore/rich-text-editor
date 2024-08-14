@@ -219,3 +219,22 @@ The callbacks can perform different tasks and can be used to extend the function
   </Tabs.Tab>
 
 </Tabs>
+
+### showFloatingMenu
+
+<OptionTable
+  options={[
+    [
+      "showFloatingMenu",
+      "boolean | undefined",
+      "false",
+      "Whether to show the floating menu on  selection.",
+    ],
+  ]}
+/>
+
+When set to `true{:ts}`, the `FloatingMenu` will show up when some text is selected.
+
+```tsx filename="showFloatingMenu"
+<RichTextEditor showFloatingMenu={true} />
+```

@@ -124,7 +124,7 @@ export default function TextActions() {
   ];
 
   return (
-    <div className="flex space-x-1 text-black dark:text-slate-100">
+    <div className="flex items-center space-x-1 text-black dark:text-slate-100">
       {textFormats.map((format) => {
         return (
           <Toggle
@@ -139,6 +139,7 @@ export default function TextActions() {
               format.setter(pressed);
             }}
             disabled={!editor.isEditable()}
+            className="rounded-lg size-8"
           >
             <FontAwesomeIcon icon={format.icon} />
           </Toggle>

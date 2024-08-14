@@ -1,6 +1,6 @@
 {
   "name": "@poetry-galore/types",
-  "version": "0.0.2",
+  "version": "0.0.16",
   "description": "TypeScript definitions for @poetry-galore/rich-text-editor",
   "main": "",
   "types": "index.d.ts",

@@ -22,6 +22,7 @@ import { cn } from "./lib/utils";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
+import FloatingMenuPlugin from "./plugins/FloatingMenuPlugin";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -38,6 +39,7 @@ function RichTextEditor({
   editable = true,
   initialEditorState,
   onEditorChange,
+  showFloatingMenu = false,
   children,
   ...rest
 }: RichTextEditorProps) {
@@ -56,7 +58,7 @@ function RichTextEditor({
   }, [placeholderText]);
 
   /** Check if the initialEditorState is valid HTML so as to use the HTMLPlugin
-   * and avoid settting editorState in the {@link initialConfig}
+   * and avoid setting editorState in the {@link initialConfig}
    */
   const initialEditorStateIsHTML =
     typeof initialEditorState === "string" &&
@@ -113,6 +115,7 @@ function RichTextEditor({
         {initialEditorStateIsHTML && initialEditorState && (
           <HTMLPlugin initialEditorState={initialEditorState} />
         )}
+        {showFloatingMenu && <FloatingMenuPlugin />}
         {children}
       </LexicalComposer>
     </div>
