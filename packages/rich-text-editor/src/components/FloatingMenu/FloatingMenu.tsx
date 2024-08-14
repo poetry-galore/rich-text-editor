@@ -24,5 +24,5 @@ export const FloatingMenu = forwardRef<HTMLDivElement, FloatingMenuProps>(
         <TextActions />
       </div>
     );
-  }
+  },
 );

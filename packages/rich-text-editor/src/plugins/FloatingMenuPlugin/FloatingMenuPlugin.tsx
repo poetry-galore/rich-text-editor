@@ -58,7 +58,7 @@ export default function FloatingMenuPlugin() {
     const unregisterListener = editor.registerUpdateListener(
       ({ editorState }) => {
         editorState.read(() => $handleSelectionChange());
-      }
+      },
     );
 
     return unregisterListener;
@@ -78,6 +78,6 @@ export default function FloatingMenuPlugin() {
 
   return createPortal(
     <FloatingMenu ref={ref} editor={editor} coords={coords} />,
-    DOM_ELEMENT
+    DOM_ELEMENT,
   );
 }

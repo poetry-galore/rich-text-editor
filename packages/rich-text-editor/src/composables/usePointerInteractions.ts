@@ -1,8 +1,8 @@
 /**
  * Author: Konstantin Münster
- * 
+ *
  * {@link https://github.com/konstantinmuenster Github}
- * 
+ *
  * {@link https://github.com/konstantinmuenster/lexical-react-floating-menu Repository}
  */
 
