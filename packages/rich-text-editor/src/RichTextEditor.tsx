@@ -17,6 +17,7 @@ import RichTextEditorTheme from "./RichTextEditorTheme";
 import "./RichTextEditor.css";
 
 import { cn } from "./lib/utils";
+import EditorConfig from "./lib/config";
 
 // Custom plugins
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
@@ -41,9 +42,20 @@ function RichTextEditor({
   onEditorChange,
   showFloatingMenu = false,
   showToolbar = true,
+  editorConfig = {},
   children,
   ...rest
 }: RichTextEditorProps) {
+  EditorConfig.userConfig = editorConfig;
+
+  showToolbar = showToolbar
+    ? showToolbar
+    : EditorConfig.pluginIsRegistered("toolbar");
+
+  showFloatingMenu = showFloatingMenu
+    ? showFloatingMenu
+    : EditorConfig.pluginIsRegistered("floatingMenu");
+
   const customContentEditable = useMemo(() => {
     return (
       <ContentEditable
