@@ -1,7 +1,18 @@
 import { TextFormatType } from "lexical";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
+import { type TextActionsConfig, TEXT_ACTIONS } from "@/lib/config";
 
+/**
+ * TextActions props
+ */
+export type TextActionsProps = React.AllHTMLAttributes<HTMLDivElement> & {
+  config?: TextActionsConfig;
+};
+
+/**
+ * Type of a text action
+ */
 export type TextActionType = {
   /**
    * The type of the text format. eg bold or italic
@@ -22,3 +33,8 @@ export type TextActionType = {
    */
   isSet: boolean;
 };
+
+export type TextActionsMapping = Record<
+  (typeof TEXT_ACTIONS)[number],
+  TextActionType
+>;

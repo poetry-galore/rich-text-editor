@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
@@ -26,12 +26,22 @@ import {
 
 import { Toggle } from "@/components/ui/toggle";
 
-import { TextActionType } from "./TextAction.types";
+import {
+  TextActionsMapping,
+  TextActionsProps,
+  TextActionType,
+} from "./TextAction.types";
 
 /**
  * Bold, italic, underline, code, highlight, strikethrough, subscript and superscript actions
  */
-export default function TextActions() {
+export default function TextActions({ config }: TextActionsProps) {
+  const memoizedConfig: typeof config = useMemo(() => {
+    return config
+      ? config
+      : ["bold", "italic", "underline", "strikethrough", "highlight"];
+  }, [config]);
+
   const [editor] = useLexicalComposerContext();
 
   const [isBold, setIsBold] = useState<boolean>(false);
@@ -76,60 +86,65 @@ export default function TextActions() {
     );
   }, [editor, $updateToolbar]);
 
-  const textFormats: TextActionType[] = [
-    {
+  const textActionsMapping: TextActionsMapping = {
+    bold: {
       type: "bold",
       icon: () => <FontBoldIcon />,
       setter: setIsBold,
       isSet: isBold,
     },
-    {
+    italic: {
       type: "italic",
       icon: () => <FontItalicIcon />,
       setter: setIsItalic,
       isSet: isItalic,
     },
-    {
+    underline: {
       type: "underline",
       icon: () => <UnderlineIcon />,
       setter: setIsUnderline,
       isSet: isUnderline,
     },
-    {
+    strikethrough: {
       type: "strikethrough",
       icon: () => <StrikethroughIcon />,
       setter: setIsStrikethrough,
       isSet: isStrikethrough,
     },
-    {
+
+    code: {
       type: "code",
       icon: () => <CodeIcon />,
       setter: setIsCode,
       isSet: isCode,
     },
-    {
+    highlight: {
       type: "highlight",
       icon: faHighlighter,
       setter: setIsHighlight,
       isSet: isHighlight,
     },
-    {
+    subscript: {
       type: "subscript",
       icon: faSubscript,
       setter: setIsSubscript,
       isSet: isSubscript,
     },
-    {
+    superscript: {
       type: "superscript",
       icon: faSuperscript,
       setter: setIsSuperscript,
       isSet: isSuperscript,
     },
-  ];
+  };
 
-  return (
+  const textActions: TextActionType[] = memoizedConfig.map(
+    (action) => textActionsMapping[action],
+  );
+
+  return textActions.length > 0 ? (
     <div className="flex items-center space-x-1 text-black dark:text-slate-100">
-      {textFormats.map((format) => {
+      {textActions.map((format) => {
         return (
           <Toggle
             key={format.type}
@@ -154,5 +169,7 @@ export default function TextActions() {
         );
       })}
     </div>
+  ) : (
+    <></>
   );
 }
