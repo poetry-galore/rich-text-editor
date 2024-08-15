@@ -103,9 +103,17 @@ export const WithConfig: Story = {
   args: {
     editorConfig: {
       plugins: {
-        toolbar: false,
+        toolbar: {
+          register: true,
+          textActions: ["bold", "code", "underline", "superscript", "italic"],
+          historyActions: ["undo"],
+          blockTypes: ["quote"],
+        },
         html: true,
-        floatingMenu: true,
+        floatingMenu: {
+          register: true,
+          textActions: ["bold", "italic"],
+        },
       },
     },
   },
