@@ -32,3 +32,27 @@ type Story = StoryObj<typeof meta>;
  * Without passing any props
  */
 export const Default: Story = {};
+
+export const WithSeparator: Story = {
+  args: {
+    separator: true,
+  },
+};
+
+export const WithConfigUndoOnly: Story = {
+  args: {
+    config: ["undo"],
+  },
+};
+
+export const WithConfigRedoOnly: Story = {
+  args: {
+    config: ["redo"],
+  },
+};
+
+export const WithConfigUndoAndRedo: Story = {
+  args: {
+    config: ["undo", "redo"],
+  },
+};
