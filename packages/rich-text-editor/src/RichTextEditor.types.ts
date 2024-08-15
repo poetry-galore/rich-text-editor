@@ -46,18 +46,6 @@ interface Props {
    */
   onEditorChange?: CustomOnChangePluginProps[];
   /**
-   * Set to `true` to show the floating menu on selection.
-   *
-   * @default false
-   */
-  showFloatingMenu?: boolean;
-  /**
-   * Set to `false` to hide the toolbar
-   *
-   * @default true
-   */
-  showToolbar?: boolean;
-  /**
    * Configuration of the editor.
    */
   editorConfig?: EditorConfigSchema;
