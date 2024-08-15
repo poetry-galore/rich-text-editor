@@ -30,31 +30,47 @@ export const HistoryActions = ({ config, separator }: HistoryActionsProps) => {
   const [canUndo, setCanUndo] = useState<boolean>(false);
   const [canRedo, setCanRedo] = useState<boolean>(false);
 
+  const [isUndoIncluded, setIsUndoIncluded] = useState<boolean>(
+    memoizedConfig.includes("undo"),
+  );
+  const [isRedoIncluded, setIsRedoIncluded] = useState<boolean>(
+    memoizedConfig.includes("redo"),
+  );
+
+  useEffect(() => {
+    setIsUndoIncluded(memoizedConfig.includes("undo"));
+    setIsRedoIncluded(memoizedConfig.includes("redo"));
+  }, [memoizedConfig]);
+
   useEffect(() => {
     return mergeRegister(
-      editor.registerCommand(
-        CAN_UNDO_COMMAND,
-        (payload) => {
-          setCanUndo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
-      editor.registerCommand(
-        CAN_REDO_COMMAND,
-        (payload) => {
-          setCanRedo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
+      isUndoIncluded
+        ? editor.registerCommand(
+            CAN_UNDO_COMMAND,
+            (payload) => {
+              setCanUndo(payload);
+              return false;
+            },
+            COMMAND_PRIORITY_CRITICAL,
+          )
+        : () => null,
+      isRedoIncluded
+        ? editor.registerCommand(
+            CAN_REDO_COMMAND,
+            (payload) => {
+              setCanRedo(payload);
+              return false;
+            },
+            COMMAND_PRIORITY_CRITICAL,
+          )
+        : () => null,
     );
-  }, [editor]);
+  }, [editor, isUndoIncluded, isRedoIncluded]);
 
   return (
     <>
       <div>
-        {memoizedConfig.includes("undo") && (
+        {isUndoIncluded && (
           <Button
             onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
             size={"sm"}
@@ -65,7 +81,7 @@ export const HistoryActions = ({ config, separator }: HistoryActionsProps) => {
             <FontAwesomeIcon icon={faUndoAlt} />
           </Button>
         )}
-        {memoizedConfig.includes("redo") && (
+        {isRedoIncluded && (
           <Button
             onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
             size={"sm"}
