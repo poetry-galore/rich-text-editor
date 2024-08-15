@@ -114,7 +114,11 @@ class Config {
     let currentConfig: any =
       this.getConfig(configType)?.[parent as keyof EditorConfigSchema];
 
-    for (let child of children) currentConfig = currentConfig?.[child];
+    let i = 0;
+    while (currentConfig && i < children.length) {
+      currentConfig = currentConfig?.[children[i]];
+      i++;
+    }
 
     return currentConfig;
   }
