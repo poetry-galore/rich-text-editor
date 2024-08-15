@@ -40,28 +40,22 @@ function RichTextEditor({
   editable = true,
   initialEditorState,
   onEditorChange,
-  showFloatingMenu = false,
-  showToolbar = true,
   editorConfig = {},
   children,
   ...rest
 }: RichTextEditorProps) {
   EditorConfig.userConfig = editorConfig;
 
-  showToolbar = showToolbar
-    ? showToolbar
-    : EditorConfig.pluginIsRegistered("toolbar");
+  const showToolbar = EditorConfig.pluginIsRegistered("toolbar");
 
-  showFloatingMenu = showFloatingMenu
-    ? showFloatingMenu
-    : EditorConfig.pluginIsRegistered("floatingMenu");
+  const showFloatingMenu = EditorConfig.pluginIsRegistered("floatingMenu");
 
   const customContentEditable = useMemo(() => {
     return (
       <ContentEditable
         className={cn(
           "w-full min-h-[200px] p-2 focus:outline-none",
-          !showToolbar && "min-h-full",
+          !showToolbar && "min-h-full"
         )}
       />
     );
@@ -101,7 +95,7 @@ function RichTextEditor({
 
   rest.className = cn(
     "max-w-4xl h-full text-black dark:text-slate-100 rounded-xl bg-inherit dark:bg-inherit",
-    rest.className,
+    rest.className
   );
 
   return (
@@ -110,7 +104,7 @@ function RichTextEditor({
         <div
           className={cn(
             "relative w-full min-h-full flex flex-col font-normal leading-5 rounded-xl bg-inherit dark:bg-inherit",
-            !showToolbar && "h-full",
+            !showToolbar && "h-full"
           )}
         >
           {/* Toolbar Here */}
