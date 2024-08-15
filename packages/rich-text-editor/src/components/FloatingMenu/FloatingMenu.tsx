@@ -2,11 +2,13 @@ import { forwardRef } from "react";
 
 import { FloatingMenuProps } from "./FloatingMenu.types";
 import TextActions from "../TextActions";
+import { useConfig } from "@/composables/useConfig";
 
 export const FloatingMenu = forwardRef<HTMLDivElement, FloatingMenuProps>(
   function FloatingMenu(props, ref) {
     const { coords } = props;
 
+    const textActionsConfig = useConfig("plugins.floatingMenu.textActions");
     const shouldShow = coords !== undefined;
 
     return (
@@ -21,7 +23,7 @@ export const FloatingMenu = forwardRef<HTMLDivElement, FloatingMenuProps>(
           opacity: shouldShow ? 1 : 0,
         }}
       >
-        <TextActions />
+        <TextActions config={textActionsConfig} />
       </div>
     );
   },

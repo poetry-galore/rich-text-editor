@@ -4,10 +4,14 @@ import BlockTypeDropdown from "@/components/BlockTypeDropdown";
 
 import { Separator } from "@/components/ui/separator";
 
+import { useConfig } from "@/composables/useConfig";
+
 /**
  * Contains all actions that can be done on the editor.
  */
 function ToolbarPlugin() {
+  const textActionsConfig = useConfig("plugins.toolbar.textActions");
+
   return (
     <>
       <div className="sticky top-1 z-10 flex justify-center space-x-2 m-1 mx-auto py-1 px-2 text-black rounded-xl bg-white/60 shadow-sm backdrop-blur-sm shadow-slate-500 dark:text-slate-100 dark:bg-slate-900/60">
@@ -21,7 +25,7 @@ function ToolbarPlugin() {
           orientation="vertical"
           className="h-auto my-1 bg-slate-300"
         />
-        <TextActions />
+        <TextActions config={textActionsConfig} />
       </div>
     </>
   );
