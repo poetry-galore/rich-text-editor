@@ -50,3 +50,15 @@ export const NoneEditable: Story = {
     ),
   ],
 };
+
+export const WithEmptyConfig: Story = {
+  args: {
+    config: [],
+  },
+};
+
+export const WithNonEmptyConfig: Story = {
+  args: {
+    config: ["h1", "quote", "number"],
+  },
+};

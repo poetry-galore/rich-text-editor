@@ -2,8 +2,6 @@ import HistoryActions from "@/components/HistoryActions";
 import TextActions from "@/components/TextActions";
 import BlockTypeDropdown from "@/components/BlockTypeDropdown";
 
-import { Separator } from "@/components/ui/separator";
-
 import { useConfig } from "@/composables/useConfig";
 
 /**
@@ -12,17 +10,13 @@ import { useConfig } from "@/composables/useConfig";
 function ToolbarPlugin() {
   const textActionsConfig = useConfig("plugins.toolbar.textActions");
   const historyActionsConfig = useConfig("plugins.toolbar.historyActions");
+  const blockTypesConfig = useConfig("plugins.toolbar.blockTypes");
 
   return (
     <>
       <div className="sticky top-1 z-10 flex justify-center space-x-2 m-1 mx-auto py-1 px-2 text-black rounded-xl bg-white/60 shadow-sm backdrop-blur-sm shadow-slate-500 dark:text-slate-100 dark:bg-slate-900/60">
         <HistoryActions config={historyActionsConfig} separator={true} />
-
-        <BlockTypeDropdown />
-        <Separator
-          orientation="vertical"
-          className="h-auto my-1 bg-slate-300"
-        />
+        <BlockTypeDropdown config={blockTypesConfig} separator={true} />
         <TextActions config={textActionsConfig} />
       </div>
     </>
