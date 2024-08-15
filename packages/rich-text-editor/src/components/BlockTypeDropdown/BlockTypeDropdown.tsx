@@ -21,6 +21,9 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
+import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
+import { $findMatchingParent } from "@lexical/utils";
+import { useState, useCallback, useEffect, useMemo } from "react";
 
 import {
   Heading1Icon,
@@ -43,16 +46,33 @@ import {
   SelectItem,
   SelectGroup,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 
-import { blockTypeToBlockName } from "./BlockTypeDropdown.types";
-import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
-import { $findMatchingParent } from "@lexical/utils";
-import { useState, useCallback, useEffect } from "react";
+import type { BlockTypesConfig } from "@/lib/config";
+import {
+  type BlockTypeDropdownProps,
+  blockTypeToBlockName,
+} from "./BlockTypeDropdown.types";
 
 /**
  * Toggle block types between headings, lists, quote and normal paragraph.
  */
-export default function BlockTypeDropdown() {
+export default function BlockTypeDropdown({
+  config,
+  separator,
+}: BlockTypeDropdownProps) {
+  const memoizedConfig: BlockTypesConfig = useMemo(() => {
+    let _config = config
+      ? config
+      : ["paragraph", "h1", "h2", "quote", "bullet", "number"];
+
+    // Ensure paragraph is in config
+    if (_config.length > 0 && !_config.includes("paragraph")) {
+      return ["paragraph"].concat(_config) as BlockTypesConfig;
+    }
+    return _config as BlockTypesConfig;
+  }, [config]);
+
   const [editor] = useLexicalComposerContext();
 
   const [blockType, setBlockType] =
@@ -102,21 +122,25 @@ export default function BlockTypeDropdown() {
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        () => {
-          $updateBlockType();
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          $updateBlockType();
-        });
-      }),
+      memoizedConfig.length > 0
+        ? editor.registerCommand(
+            SELECTION_CHANGE_COMMAND,
+            () => {
+              $updateBlockType();
+              return false;
+            },
+            COMMAND_PRIORITY_CRITICAL,
+          )
+        : () => null,
+      memoizedConfig.length > 0
+        ? editor.registerUpdateListener(({ editorState }) => {
+            editorState.read(() => {
+              $updateBlockType();
+            });
+          })
+        : () => null,
     );
-  }, [editor, $updateBlockType]);
+  }, [editor, $updateBlockType, memoizedConfig]);
 
   const formatHeading = (headingLevel: HeadingTagType) => {
     editor.update(() => {
@@ -170,64 +194,75 @@ export default function BlockTypeDropdown() {
     quote: () => <TextQuoteIcon className={iconClass} />,
   };
 
-  return (
-    <Select
-      value={blockType}
-      disabled={!editor.isEditable()}
-      onValueChange={(value) => {
-        switch (value) {
-          case "h1":
-            formatHeading("h1");
-            break;
-          case "h2":
-            formatHeading("h2");
-            break;
-          case "h3":
-            formatHeading("h3");
-            break;
-          case "h4":
-            formatHeading("h4");
-            break;
-          case "h5":
-            formatHeading("h5");
-            break;
-          case "h6":
-            formatHeading("h6");
-            break;
-          case "paragraph":
-            formatParagraph();
-            break;
-          case "number":
-            formatOrderedList();
-            break;
-          case "bullet":
-            formatUnorderedList();
-            break;
-          case "quote":
-            formatQuote();
-            break;
-        }
-      }}
-    >
-      <SelectTrigger className="w-40 h-9 select-none">
-        <SelectValue placeholder="Block Type" />
-      </SelectTrigger>
+  return memoizedConfig.length > 0 ? (
+    <>
+      <Select
+        value={blockType}
+        disabled={!editor.isEditable()}
+        onValueChange={(value) => {
+          switch (value) {
+            case "h1":
+              formatHeading("h1");
+              break;
+            case "h2":
+              formatHeading("h2");
+              break;
+            case "h3":
+              formatHeading("h3");
+              break;
+            case "h4":
+              formatHeading("h4");
+              break;
+            case "h5":
+              formatHeading("h5");
+              break;
+            case "h6":
+              formatHeading("h6");
+              break;
+            case "paragraph":
+              formatParagraph();
+              break;
+            case "number":
+              formatOrderedList();
+              break;
+            case "bullet":
+              formatUnorderedList();
+              break;
+            case "quote":
+              formatQuote();
+              break;
+          }
+        }}
+      >
+        <SelectTrigger className="w-40 h-9 select-none">
+          <SelectValue placeholder="Block Type" />
+        </SelectTrigger>
 
-      <SelectContent>
-        <SelectGroup>
-          {Object.keys(blockTypeToBlockName).map((blockType) => {
-            const icon = icons[blockType];
-            return (
-              <SelectItem key={blockType} value={blockType}>
-                <div className="flex items-center space-x-2">
-                  {icon()}
-                  <p>{blockTypeToBlockName[blockType]}</p>
-                </div>
-              </SelectItem>
-            );
-          })}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+        <SelectContent>
+          <SelectGroup>
+            {memoizedConfig.map((blockType) => {
+              const icon = icons[blockType];
+              return (
+                <SelectItem key={blockType} value={blockType}>
+                  <div className="flex items-center space-x-2">
+                    {icon()}
+                    <p>{blockTypeToBlockName[blockType]}</p>
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      {separator && (
+        <Separator
+          orientation="vertical"
+          className="h-auto my-1 bg-slate-300"
+        />
+      )}
+    </>
+  ) : (
+    <></>
   );
 }

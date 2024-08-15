@@ -1,3 +1,5 @@
+import type { BlockTypesConfig } from "@/lib/config";
+
 export const blockTypeToBlockName: Record<string, string> = {
   paragraph: "Normal",
   h1: "Heading 1",
@@ -9,4 +11,15 @@ export const blockTypeToBlockName: Record<string, string> = {
   quote: "Quote",
   bullet: "Bulleted List",
   number: "Numbered List",
+};
+
+export type BlockTypeDropdownProps = React.AllHTMLAttributes<HTMLDivElement> & {
+  /**
+   * Configuration
+   */
+  config?: BlockTypesConfig;
+  /**
+   * Whether to add a separator at the end
+   */
+  separator?: boolean;
 };

@@ -26,7 +26,7 @@ export const BLOCK_TYPES = [
 
 export type TextActionsConfig = readonly (typeof TEXT_ACTIONS)[number][];
 export type HistoryActionsConfig = readonly (typeof HISTORY_ACTIONS)[number][];
-type blockTypesType = readonly (typeof BLOCK_TYPES)[number][];
+export type BlockTypesConfig = readonly (typeof BLOCK_TYPES)[number][];
 
 /**
  * Configuration for the toolbar plugin
@@ -47,7 +47,7 @@ type ToolbarPluginConfig = {
   /**
    * Block types to register
    */
-  blockTypes?: blockTypesType;
+  blockTypes?: BlockTypesConfig;
 };
 
 /**
@@ -69,7 +69,7 @@ type FloatingMenuPluginConfig = {
   /**
    * Block types to register
    */
-  blockTypes?: blockTypesType;
+  blockTypes?: BlockTypesConfig;
 };
 
 /**
