@@ -5,6 +5,7 @@ import type {
   EditorConfigSchema,
   PluginsConfigKeys,
 } from "./config.types";
+import { register } from "module";
 
 /**
  * Class for handling configuration of the editor
@@ -173,12 +174,16 @@ export function mergeConfigs(defaultConfig: any, userConfig: any) {
           break;
         case "boolean":
           if (userValue === true) {
-            mergedConfig[_key] = defaultConfig[_key];
+            if (_key === "register") {
+              mergedConfig[_key] = userValue;
+            } else {
+              mergedConfig[_key] = defaultConfig[_key];
 
-            // Set register property to true if the default was false
-            mergedConfig[_key]?.register === false &&
-              (mergedConfig[_key].register = true);
-          } else if (_key === "register" && userValue === false) {
+              // Set register property to true if the default was false
+              mergedConfig[_key]?.register === false &&
+                (mergedConfig[_key].register = true);
+            }
+          } else if (userValue === false && _key === "register") {
             // Stop processing current object if register key is false
             return { register: false };
           }
