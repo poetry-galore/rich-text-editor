@@ -50,3 +50,9 @@ export const NoneEditable: Story = {
     ),
   ],
 };
+
+export const WithConfig: Story = {
+  args: {
+    config: ["bold", "italic", "strikethrough"],
+  },
+};
