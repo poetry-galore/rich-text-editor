@@ -161,7 +161,11 @@ export function mergeConfigs(defaultConfig: any, userConfig: any) {
     if (userValue !== undefined) {
       switch (typeof userValue) {
         case "object":
-          mergedConfig[_key] = mergeConfigs(defaultConfig[_key], userValue);
+          if (Array.isArray(userValue)) {
+            mergedConfig[_key] = userValue;
+          } else {
+            mergedConfig[_key] = mergeConfigs(defaultConfig[_key], userValue);
+          }
           break;
         case "boolean":
           if (userValue === true) {
