@@ -114,3 +114,18 @@ export const WithoutToolbarWithFloatingMenu: Story = {
     showFloatingMenu: true,
   },
 };
+
+/**
+ * Setting the config prop
+ */
+export const WithConfig: Story = {
+  args: {
+    editorConfig: {
+      plugins: {
+        toolbar: false,
+        html: true,
+        floatingMenu: true,
+      },
+    },
+  },
+};

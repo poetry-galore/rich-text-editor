@@ -1,5 +1,6 @@
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
 import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
+import type { EditorConfigSchema } from "./lib/config";
 
 interface Props {
   /**
@@ -56,6 +57,10 @@ interface Props {
    * @default true
    */
   showToolbar?: boolean;
+  /**
+   * Configuration of the editor.
+   */
+  editorConfig?: EditorConfigSchema;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
