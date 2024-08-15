@@ -48,6 +48,107 @@ export interface CustomOnChangePluginProps {
   ignoreHistoryMergeTagChange?: boolean;
 }
 
+export declare const TEXT_ACTIONS: readonly [
+  "bold",
+  "italic",
+  "underline",
+  "strikethrough",
+  "code",
+  "highlight",
+  "superscript",
+  "subscript",
+];
+
+export declare const HISTORY_ACTIONS: readonly ["undo", "redo"];
+
+export declare const BLOCK_TYPES: readonly [
+  "paragraph",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "quote",
+  "bullet",
+  "number",
+];
+
+export type TextActionsConfig = readonly (typeof TEXT_ACTIONS)[number][];
+export type HistoryActionsConfig = readonly (typeof HISTORY_ACTIONS)[number][];
+export type BlockTypesConfig = readonly (typeof BLOCK_TYPES)[number][];
+
+/**
+ * Configuration for the toolbar plugin
+ */
+export type ToolbarPluginConfig = {
+  /**
+   * Whether to register the Toolbar plugin
+   */
+  register: boolean;
+  /**
+   * Text actions to register
+   */
+  textActions?: TextActionsConfig;
+  /**
+   * History actions to register
+   */
+  historyActions?: HistoryActionsConfig;
+  /**
+   * Block types to register
+   */
+  blockTypes?: BlockTypesConfig;
+};
+
+/**
+ * Configuration for the floating menu plugin
+ */
+export type FloatingMenuPluginConfig = {
+  /**
+   * Whether to resister the Floating Menu plugin
+   */
+  register: boolean;
+  /**
+   * Text actions to register
+   */
+  textActions?: TextActionsConfig;
+  /**
+   * History actions to register
+   */
+  historyActions?: HistoryActionsConfig;
+  /**
+   * Block types to register
+   */
+  blockTypes?: BlockTypesConfig;
+};
+
+/**
+ * Configuration for the HTML plugin
+ */
+export type HTMLPluginConfig = {
+  /**
+   * Whether to register the HTML plugin in the editor
+   */
+  register: boolean;
+};
+
+/**
+ * Represent the plugins configuration.
+ * All custom plugins available.
+ */
+export type PluginsConfig = {
+  toolbar?: ToolbarPluginConfig | boolean;
+  floatingMenu?: FloatingMenuPluginConfig | boolean;
+  html?: HTMLPluginConfig | boolean;
+};
+
+/**
+ * Complete schema of the editor configuration.
+ */
+export type EditorConfigSchema = {
+  plugins?: PluginsConfig;
+};
+
 export interface Props {
   /**
    * Text to display before user inputs
@@ -92,12 +193,11 @@ export interface Props {
    */
   onEditorChange?: CustomOnChangePluginProps[];
   /**
-   * Set to `true` to show the floating menu on selection.
-   *
-   * @default false
+   * Configuration of the editor.
    */
-  showFloatingMenu?: boolean;
+  editorConfig?: EditorConfigSchema;
 }
+
 export type RichTextEditorProps = React.PropsWithChildren<Props> &
   React.AllHTMLAttributes<HTMLDivElement>;
 
@@ -109,7 +209,7 @@ export declare function RichTextEditor({
   editable,
   initialEditorState,
   onEditorChange,
-  showFloatingMenu,
+  editorConfig,
   children,
   ...rest
 }: RichTextEditorProps): react_jsx_runtime.JSX.Element;

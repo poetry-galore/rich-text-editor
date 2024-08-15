@@ -1,6 +1,6 @@
 {
   "name": "@poetry-galore/rich-text-editor",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Rich text editor using lexical",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
