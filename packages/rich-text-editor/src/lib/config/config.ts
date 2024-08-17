@@ -10,7 +10,7 @@ import { register } from "module";
 /**
  * Class for handling configuration of the editor
  */
-class Config {
+export class Config {
   /**
    * Default configuration
    *
