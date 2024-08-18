@@ -134,3 +134,8 @@ export type ConfigPaths =
   | "plugins.floatingMenu.historyActions"
   | "plugins.floatingMenu.register"
   | "plugins.floatingMenu.textActions";
+
+/**
+ * Keys that are allowed to be of type boolean in the default config.
+ */
+export const BooleanKeysInDefaultConfig: string[] = ["register"] as const;

@@ -1,11 +1,11 @@
 import { DEFAULT_EDITOR_CONFIG } from "./default";
-import type {
-  AvailableConfigs,
-  ConfigPaths,
-  EditorConfigSchema,
-  PluginsConfigKeys,
+import {
+  BooleanKeysInDefaultConfig,
+  type AvailableConfigs,
+  type ConfigPaths,
+  type EditorConfigSchema,
+  type PluginsConfigKeys,
 } from "./config.types";
-import { register } from "module";
 
 /**
  * Class for handling configuration of the editor
@@ -156,12 +156,21 @@ export default EditorConfig;
  * @param defaultConfig Config to use as the default
  * @param userConfig Custom config passed by the user
  * @returns merged configuration
+ *
+ * @throws If a key not expected to be Boolean in the defaultConfig is found
  */
 export function mergeConfigs(defaultConfig: any, userConfig: any) {
   const mergedConfig: Record<any, any> = {};
 
   for (const _key in defaultConfig) {
     const userValue = userConfig[_key];
+
+    if (
+      typeof defaultConfig[_key] === "boolean" &&
+      !BooleanKeysInDefaultConfig.includes(_key)
+    ) {
+      throw Error(`${_key} cannot be a Boolean in defaultConfig`);
+    }
 
     if (userValue !== undefined) {
       switch (typeof userValue) {
