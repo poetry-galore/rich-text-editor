@@ -1,5 +1,5 @@
 import {
-  type EditorConfigSchema,
+  type DefaultEditorConfigSchema,
   BLOCK_TYPES,
   HISTORY_ACTIONS,
   TEXT_ACTIONS,
@@ -8,7 +8,7 @@ import {
 /**
  * Default configuration
  */
-export const DEFAULT_EDITOR_CONFIG: EditorConfigSchema = {
+export const DEFAULT_EDITOR_CONFIG: DefaultEditorConfigSchema = {
   plugins: {
     toolbar: {
       register: true,
@@ -25,6 +25,8 @@ export const DEFAULT_EDITOR_CONFIG: EditorConfigSchema = {
         "strikethrough",
         "highlight",
       ],
+      historyActions: [],
+      blockTypes: [],
     },
     html: {
       register: true,

@@ -29,6 +29,40 @@ export type HistoryActionsConfig = readonly (typeof HISTORY_ACTIONS)[number][];
 export type BlockTypesConfig = readonly (typeof BLOCK_TYPES)[number][];
 
 /**
+ * Make sure all types in a field are required.
+ * Also recurses into nested object types.
+ *
+ * @example
+ * type Test = {
+ *   one: string;
+ *   two?: string;
+ *   three: string | undefined;
+ *   four: string | null;
+ *   five: {
+ *     six?: number;
+ *     seven: number | null;
+ *   };
+ * }
+ *
+ * type TestWithAllFieldsRequired = RequireAllFields<Test>
+ *
+ * // TestWithALlFieldsRequired type will be equal to
+ * type TestWithAllFieldsRequired = {
+ *   one: string;
+ *   two: string;
+ *   three: string;
+ *   four: string;
+ *   five: {
+ *     six: number;
+ *     seven: number;
+ *   };
+ * }
+ */
+type RequireAllFields<T> = {
+  [P in keyof T]-?: RequireAllFields<NonNullable<T[P]>>;
+};
+
+/**
  * Configuration for the toolbar plugin
  */
 type ToolbarPluginConfig = {
@@ -104,6 +138,14 @@ export type PluginsConfigKeys = keyof PluginsConfig;
 export type EditorConfigSchema = {
   plugins?: PluginsConfig;
 };
+
+/**
+ * Type of the default editor config.
+ *
+ * Ensures the default config sets all fields that can be used as a
+ * fallback if the user does not provide that configuration.
+ */
+export type DefaultEditorConfigSchema = RequireAllFields<EditorConfigSchema>;
 
 /**
  * Keys in the EditorConfigSchema type.
