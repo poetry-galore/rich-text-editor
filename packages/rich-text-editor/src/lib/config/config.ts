@@ -6,6 +6,7 @@ import {
   type EditorConfigSchema,
   type PluginsConfigKeys,
 } from "./config.types";
+import { deepFreeze } from "../utils";
 
 /**
  * Class for handling configuration of the editor
@@ -16,7 +17,9 @@ export class Config {
    *
    * @private
    */
-  private _defaultConfig: EditorConfigSchema = DEFAULT_EDITOR_CONFIG;
+  private _defaultConfig: EditorConfigSchema = deepFreeze(
+    structuredClone(DEFAULT_EDITOR_CONFIG),
+  );
   /**
    * Configuration provided by the user
    *
@@ -34,7 +37,7 @@ export class Config {
 
   constructor(config?: EditorConfigSchema) {
     if (config) {
-      this._userConfig = config;
+      this._userConfig = deepFreeze(config);
       this._mergeConfigs();
     }
   }
@@ -45,7 +48,7 @@ export class Config {
 
   set userConfig(config: EditorConfigSchema | undefined) {
     if (!this.userConfigIsSet) {
-      this._userConfig = config;
+      this._userConfig = deepFreeze(config);
       this._mergeConfigs();
     }
   }
@@ -68,7 +71,9 @@ export class Config {
    * @see mergeConfigs
    */
   _mergeConfigs() {
-    this._mergedConfig = mergeConfigs(this._defaultConfig, this._userConfig);
+    this._mergedConfig = deepFreeze(
+      mergeConfigs(this._defaultConfig, this._userConfig),
+    );
   }
 
   /**
@@ -186,7 +191,7 @@ export function mergeConfigs(defaultConfig: any, userConfig: any) {
             if (_key === "register") {
               mergedConfig[_key] = userValue;
             } else {
-              mergedConfig[_key] = defaultConfig[_key];
+              mergedConfig[_key] = structuredClone(defaultConfig[_key]);
 
               // Set register property to true if the default was false
               mergedConfig[_key]?.register === false &&
