@@ -1,7 +1,10 @@
-import { Config } from "../../src/lib/config/config";
+import EditorConfig, {
+  Config,
+  defineConfig,
+  mergeConfigs,
+} from "../../src/lib/config/config";
 import {
   DEFAULT_EDITOR_CONFIG,
-  DefaultEditorConfigSchema,
   EditorConfigSchema,
 } from "../../src/lib/config";
 
@@ -407,5 +410,62 @@ describe("Config", () => {
         ).toBeFalsy();
       });
     });
+  });
+});
+
+describe("defineConfig", () => {
+  it("Expect userConfig to be set when the defineConfig function is called with a valid config", () => {
+    expect(EditorConfig.userConfigIsSet).toBeFalsy();
+
+    defineConfig({
+      plugins: {
+        toolbar: true,
+        html: true,
+        floatingMenu: {
+          register: true,
+          historyActions: ["undo"],
+        },
+      },
+    });
+
+    expect(EditorConfig.userConfigIsSet).toBeTruthy();
+  });
+});
+
+describe("mergeConfigs", () => {
+  it("Throws if a key that is not supposed to be boolean is boolean", () => {
+    const testDefaultConfig = {
+      plugins: {
+        toolbar: true,
+      },
+    };
+
+    expect(() => mergeConfigs(testDefaultConfig, mockUserConfig)).throws(
+      "toolbar cannot be a Boolean in defaultConfig",
+    );
+  });
+
+  it("A userValue that is not of type of object or boolean is assigned as is in the userConfig", () => {
+    const testDefaultConfig = {
+      plugins: {
+        toolbar: { register: false },
+      },
+    };
+
+    const testUserConfig = {
+      plugins: {
+        toolbar: 1,
+      },
+    };
+
+    const expectedMergedConfig = {
+      plugins: {
+        toolbar: 1,
+      },
+    };
+
+    const mergedConfig = mergeConfigs(testDefaultConfig, testUserConfig);
+
+    expect(mergedConfig).toEqual(expectedMergedConfig);
   });
 });
