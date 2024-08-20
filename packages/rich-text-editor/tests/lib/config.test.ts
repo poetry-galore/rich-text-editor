@@ -1,6 +1,7 @@
 import { Config } from "../../src/lib/config/config";
 import {
   DEFAULT_EDITOR_CONFIG,
+  DefaultEditorConfigSchema,
   EditorConfigSchema,
 } from "../../src/lib/config";
 
@@ -27,6 +28,8 @@ const mockMergedConfig: EditorConfigSchema = {
         "strikethrough",
         "highlight",
       ],
+      historyActions: [],
+      blockTypes: [],
     },
     toolbar: {
       register: true,
@@ -41,7 +44,8 @@ const INVALID_CONFIG_TYPE = "_invalid_config_type_";
 const INVALID_CONFIG_PATH = "_invalid_config_path_";
 const INVALID_PLUGIN = "_invalid_plugin_";
 
-const configWithParam = () => new Config(mockUserConfig);
+const configWithParam = (userConfig: EditorConfigSchema = mockUserConfig) =>
+  new Config(userConfig);
 const configWithoutParam = () => new Config();
 
 type ConfigWithParamType = ReturnType<typeof configWithParam>;
@@ -250,60 +254,87 @@ describe("Config", () => {
         testConfigWithoutParam = configWithoutParam();
       });
 
-      it("Expect return to be equal to the plugins.toolbar if plugins.toolbar is boolean", () => {
-        if (testConfigWithParam.mergedConfig.plugins)
-          testConfigWithParam.mergedConfig.plugins.toolbar = false;
-
-        const toolbarPluginConfig =
-          testConfigWithParam.mergedConfig.plugins?.toolbar;
-
-        expect(toolbarPluginConfig).toBeTypeOf("boolean");
-        expect(testConfigWithParam.pluginIsRegistered("toolbar")).toEqual(
-          toolbarPluginConfig,
-        );
-      });
-
-      it("Expect return to be equal to the plugins.toolbar.register if plugins.toolbar is object", () => {
-        if (testConfigWithParam.mergedConfig.plugins)
-          testConfigWithParam.mergedConfig.plugins.toolbar = {
-            register: false,
-            textActions: ["bold"],
-          };
-
-        const toolbarPluginConfig =
-          testConfigWithParam.mergedConfig.plugins?.toolbar;
-
-        expect(toolbarPluginConfig).toBeTypeOf("object");
+      it("Expect the _mergedConfig to be used", () => {
         expect(testConfigWithParam.pluginIsRegistered("toolbar")).toEqual(
           // @ts-expect-error
-          toolbarPluginConfig.register,
+          testConfigWithParam.mergedConfig.plugins?.toolbar?.register,
         );
-      });
-
-      it("Expect return to be false if plugins.toolbar is undefined", () => {
-        if (testConfigWithParam.mergedConfig.plugins)
-          testConfigWithParam.mergedConfig.plugins.toolbar = undefined;
-
-        const toolbarPluginConfig =
-          testConfigWithParam.mergedConfig.plugins?.toolbar;
-
-        expect(toolbarPluginConfig).toBeTypeOf("undefined");
-        expect(testConfigWithParam.pluginIsRegistered("toolbar")).toBeFalsy();
-      });
-
-      it("Expect return to be false if plugins is undefined", () => {
-        testConfigWithParam.mergedConfig.plugins = undefined;
-
-        const pluginsConfig = testConfigWithParam.mergedConfig.plugins;
-
-        expect(pluginsConfig).toBeTypeOf("undefined");
-        expect(testConfigWithParam.pluginIsRegistered("toolbar")).toBeFalsy();
       });
 
       it("Expect return to be false if the mergedConfig is {}", () => {
         expect(testConfigWithoutParam.mergedConfig).toEqual({});
         expect(
           testConfigWithoutParam.pluginIsRegistered("toolbar"),
+        ).toBeFalsy();
+      });
+    });
+
+    describe("With plugin = 'toolbar' and configType = 'user' parameters", () => {
+      function generateUserConfig(
+        toolbar: "object" | "boolean" | "undefined",
+        plugins: "object" | "undefined" = "object",
+      ) {
+        const userConfig: EditorConfigSchema = {
+          plugins: undefined,
+        };
+
+        if (plugins === "object") {
+          switch (toolbar) {
+            case "object":
+              userConfig.plugins = { toolbar: { register: false } };
+              break;
+            case "boolean":
+              userConfig.plugins = { toolbar: false };
+              break;
+            case "undefined":
+              userConfig.plugins = { toolbar: undefined };
+              break;
+          }
+        }
+
+        return userConfig;
+      }
+
+      it("Expect return to be equal to the plugins.toolbar if plugins.toolbar is boolean", () => {
+        const testConfigWithParam = configWithParam(
+          generateUserConfig("boolean"),
+        );
+
+        expect(
+          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+        ).toEqual(testConfigWithParam.userConfig?.plugins?.toolbar);
+      });
+
+      it("Expect return to be equal to the plugins.toolbar.register if plugins.toolbar is object", () => {
+        const testConfigWithParam = configWithParam(
+          generateUserConfig("object"),
+        );
+
+        expect(
+          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+        ).toEqual(
+          // @ts-expect-error
+          testConfigWithParam.userConfig?.plugins?.toolbar.register,
+        );
+      });
+
+      it("Expect return to be false if plugins.toolbar is undefined", () => {
+        const testConfigWithParam = configWithParam(
+          generateUserConfig("undefined"),
+        );
+
+        expect(
+          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+        ).toBeFalsy();
+      });
+
+      it("Expect return to be false if plugins is undefined", () => {
+        const testConfigWithParam = configWithParam(
+          generateUserConfig("undefined", "undefined"),
+        );
+
+        expect(
+          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
         ).toBeFalsy();
       });
     });
@@ -315,46 +346,14 @@ describe("Config", () => {
         testConfigWithParam = configWithParam();
       });
 
-      it("Expect return to be equal to the plugins.toolbar from the defaultConfig if plugins.toolbar is boolean", () => {
-        if (testConfigWithParam.defaultConfig.plugins)
-          testConfigWithParam.defaultConfig.plugins.toolbar = false;
-
+      it("Expect return to be equal to the plugins.toolbar.register from the defaultConfig if plugins.toolbar", () => {
         const toolbarPluginConfig =
           testConfigWithParam.defaultConfig.plugins?.toolbar;
 
-        expect(toolbarPluginConfig).toBeTypeOf("boolean");
-        expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "default"),
-        ).toEqual(toolbarPluginConfig);
-      });
-
-      it("Expect return to be equal to the plugins.toolbar.register from the defaultConfig if plugins.toolbar is object", () => {
-        if (testConfigWithParam.defaultConfig.plugins)
-          testConfigWithParam.defaultConfig.plugins.toolbar = {
-            register: false,
-          };
-
-        const toolbarPluginConfig =
-          testConfigWithParam.defaultConfig.plugins?.toolbar;
-
-        expect(toolbarPluginConfig).toBeTypeOf("object");
         expect(
           testConfigWithParam.pluginIsRegistered("toolbar", "default"),
           // @ts-expect-error
         ).toEqual(toolbarPluginConfig.register);
-      });
-
-      it("Expect return to be false if plugins.toolbar is undefined in the defaultConfig", () => {
-        if (testConfigWithParam.defaultConfig.plugins)
-          testConfigWithParam.defaultConfig.plugins.toolbar = undefined;
-
-        const toolbarPluginConfig =
-          testConfigWithParam.defaultConfig.plugins?.toolbar;
-
-        expect(toolbarPluginConfig).toBeTypeOf("undefined");
-        expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "default"),
-        ).toBeFalsy();
       });
     });
 
