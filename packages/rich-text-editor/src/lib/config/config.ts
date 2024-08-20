@@ -154,6 +154,27 @@ const EditorConfig = new Config();
 export default EditorConfig;
 
 /**
+ * Takes the user configuration and sets it in the EditorConfig.
+ *
+ * @param userConfig Custom user configuration
+ *
+ * @example
+ * defineConfig({
+ *   plugins: {
+ *     toolbar: true,
+ *     floatingMenu: {
+ *       register: true,
+ *       textActions: ["bold", "italic", "underline", "strikethrough"]
+ *     },
+ *     html: true,
+ *   },
+ * })
+ */
+export function defineConfig(userConfig: EditorConfigSchema) {
+  EditorConfig.userConfig = userConfig;
+}
+
+/**
  * Recursively merges the default and custom user configurations.
  *
  * The user configuration takes precedence over the default one.
