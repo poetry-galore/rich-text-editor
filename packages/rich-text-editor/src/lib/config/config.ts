@@ -212,7 +212,7 @@ export function mergeConfigs(defaultConfig: any, userConfig: any) {
       )
         mergedConfig[_key] = { register: false };
       else {
-        mergedConfig[_key] = defaultConfig[_key];
+        mergedConfig[_key] = structuredClone(defaultConfig[_key]);
       }
     }
   }
