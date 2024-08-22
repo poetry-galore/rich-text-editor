@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 *storybook.log
+
+bundle-analysis-dev.html
+bundle-analysis-prod.html

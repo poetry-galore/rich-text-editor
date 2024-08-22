@@ -35,7 +35,7 @@ function onError(error: Error) {
 /**
  * Rich text editor built using Lexical.
  */
-function RichTextEditor({
+export function RichTextEditor({
   placeholderText = "Start your poem...",
   editable = true,
   initialEditorState,
@@ -138,5 +138,3 @@ function RichTextEditor({
     </div>
   );
 }
-
-export default RichTextEditor;
