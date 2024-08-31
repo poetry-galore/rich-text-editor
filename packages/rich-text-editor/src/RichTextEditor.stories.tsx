@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import RichTextEditor from "./RichTextEditor";
+import { RichTextEditor } from "./RichTextEditor";
 import "./RichTextEditor.css";
 
 const meta = {
