@@ -20,7 +20,7 @@ const isProduction = process.env.NODE_ENV === "production";
 const intro = `
 /**
  * Copyright (c) Poetry Galore
- * 
+ *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
@@ -81,7 +81,7 @@ export default [
           preventAssignment: true,
         }),
         postcss(),
-        typescript({ tsconfig: "./tsconfig.json" }),
+        typescript({ tsconfig: "./tsconfig.rollup.json" }),
         minify &&
           terser({
             compress: {
@@ -98,7 +98,7 @@ export default [
         }),
       ].filter(Boolean),
       external: ["react", "react-dom"],
-    })
+    }),
   ),
   {
     input: "src/index.ts",
