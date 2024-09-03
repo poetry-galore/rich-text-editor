@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import { RichTextEditor } from "./RichTextEditor";
+import { RTE } from "./RichTextEditor";
 import "./RichTextEditor.css";
+import { defineConfig } from "./lib/config";
 
 const meta = {
   title: "RichTextEditor",
-  component: RichTextEditor,
+  component: RTE,
   parameters: {
     layout: "fullscreen",
   },
@@ -22,7 +23,7 @@ const meta = {
     placeholderText: { control: "text" },
     editable: { control: "boolean" },
   },
-} satisfies Meta<typeof RichTextEditor>;
+} satisfies Meta<typeof RTE>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -100,21 +101,27 @@ export const OnEditorChangeWithIgnoreSelection: Story = {
  * Setting the config prop
  */
 export const WithConfig: Story = {
-  args: {
-    editorConfig: {
-      plugins: {
-        toolbar: {
-          register: true,
-          textActions: ["bold", "code", "underline", "superscript", "italic"],
-          historyActions: ["undo"],
-          blockTypes: ["quote"],
-        },
-        html: true,
-        floatingMenu: {
-          register: true,
-          textActions: ["bold", "italic"],
+  beforeEach: () => {
+    defineConfig({
+      name: "story",
+      config: {
+        plugins: {
+          toolbar: {
+            register: true,
+            textActions: ["bold", "code", "underline", "superscript", "italic"],
+            historyActions: ["undo"],
+            blockTypes: ["quote"],
+          },
+          html: true,
+          floatingMenu: {
+            register: true,
+            textActions: ["bold", "italic"],
+          },
         },
       },
-    },
+    });
+  },
+  args: {
+    configName: "story",
   },
 };

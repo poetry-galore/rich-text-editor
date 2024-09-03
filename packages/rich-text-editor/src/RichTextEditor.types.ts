@@ -1,6 +1,6 @@
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
+import { Config } from "./lib/config/config";
 import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
-import type { EditorConfigSchema } from "./lib/config";
 
 interface Props {
   /**
@@ -46,9 +46,19 @@ interface Props {
    */
   onEditorChange?: CustomOnChangePluginProps[];
   /**
-   * Configuration of the editor.
+   * An instance of {@link Config} used in defineConfig.
+   * Set this to the configInstance passed in defineConfig if a custom one
+   * was used.
    */
-  editorConfig?: EditorConfigSchema;
+  configInstance?: Config;
+  /**
+   * Name of the configuraion to use.
+   * Should be one of the names of configurations provided in the defineConfig function
+   * if provided.
+   *
+   * If not given, then the default configuration is used.
+   */
+  configName?: string;
 }
 
 export type RichTextEditorProps = React.PropsWithChildren<Props> &

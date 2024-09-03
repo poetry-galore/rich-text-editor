@@ -181,3 +181,27 @@ export type ConfigPaths =
  * Keys that are allowed to be of type boolean in the default config.
  */
 export const BooleanKeysInDefaultConfig: string[] = ["register"] as const;
+
+/**
+ * Keys found in the NamedConfig type
+ */
+export const NamedConfigKeys = {
+  required: ["name", "config"],
+  optional: [],
+};
+
+/**
+ * Config with a name to be mapped to.
+ */
+export type NamedConfig = {
+  /**
+   * Name to map the config to.
+   * Cannot be an empty string.
+   */
+  name: string;
+  /**
+   * Configuration to apply to the editor.
+   * Will be mapped to name given.
+   */
+  config: EditorConfigSchema;
+};

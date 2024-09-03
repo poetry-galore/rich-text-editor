@@ -1,4 +1,4 @@
-import { RichTextEditor } from "./RichTextEditor";
 import { defineConfig } from "./lib/config";
+import { RTE } from "./RichTextEditor";
 
-export { RichTextEditor, defineConfig };
+export { defineConfig, RTE };

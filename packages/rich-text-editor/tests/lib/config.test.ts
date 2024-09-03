@@ -1,12 +1,12 @@
+import {
+  DEFAULT_EDITOR_CONFIG,
+  EditorConfigSchema,
+} from "../../src/lib/config";
 import EditorConfig, {
   Config,
   defineConfig,
   mergeConfigs,
 } from "../../src/lib/config/config";
-import {
-  DEFAULT_EDITOR_CONFIG,
-  EditorConfigSchema,
-} from "../../src/lib/config";
 
 const mockUserConfig: EditorConfigSchema = {
   plugins: {
@@ -46,9 +46,10 @@ const mockMergedConfig: EditorConfigSchema = {
 const INVALID_CONFIG_TYPE = "_invalid_config_type_";
 const INVALID_CONFIG_PATH = "_invalid_config_path_";
 const INVALID_PLUGIN = "_invalid_plugin_";
+const TEST_CONFIG_NAME = "__test_user_config__";
 
 const configWithParam = (userConfig: EditorConfigSchema = mockUserConfig) =>
-  new Config(userConfig);
+  new Config({ name: TEST_CONFIG_NAME, config: userConfig });
 const configWithoutParam = () => new Config();
 
 type ConfigWithParamType = ReturnType<typeof configWithParam>;
@@ -58,28 +59,28 @@ describe("Config", () => {
   describe("When initialized with the config parameter", () => {
     const testConfigWithParam: ConfigWithParamType = configWithParam();
 
-    it("Expect the userConfig to be set to the passed config", () => {
-      expect(testConfigWithParam.userConfig).toEqual(mockUserConfig);
+    it("Expect the config to be set in the userConfigs map with the given name", () => {
+      expect(testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME)).toEqual(
+        mockUserConfig,
+      );
     });
 
     it("Expect the defaultConfig to be set to DEFAULT_EDITOR_CONFIG", () => {
       expect(testConfigWithParam.defaultConfig).toEqual(DEFAULT_EDITOR_CONFIG);
     });
 
-    it("Expect the mergedConfig to be a merge of defaultConfig and userConfig", () => {
-      expect(testConfigWithParam.mergedConfig).toEqual(mockMergedConfig);
-    });
-
-    it("Expect userConfigIsSet getter to return true", () => {
-      expect(testConfigWithParam.userConfigIsSet).toBeTruthy();
+    it("Expect a mergedConfig to be set in the mergedConfigs map with the same name as userCOnfig", () => {
+      expect(testConfigWithParam.mergedConfigs.get(TEST_CONFIG_NAME)).toEqual(
+        mockMergedConfig,
+      );
     });
   });
 
   describe("When initialized without the config parameter", () => {
     const testConfigWithoutParam: ConfigWithoutParamType = configWithoutParam();
 
-    it("Expect the userConfig to be undefined", () => {
-      expect(testConfigWithoutParam.userConfig).toBeUndefined();
+    it("Expect the userConfigs to be an empty map", () => {
+      expect(testConfigWithoutParam.userConfigs).toEqual(new Map());
     });
 
     it("Expect the defaultConfig to be set to DEFAULT_EDITOR_CONFIG", () => {
@@ -88,16 +89,12 @@ describe("Config", () => {
       );
     });
 
-    it("Expect the mergedConfig to be an empty object", () => {
-      expect(testConfigWithoutParam.mergedConfig).toEqual({});
-    });
-
-    it("Expect userConfigIsSet getter to return false", () => {
-      expect(testConfigWithoutParam.userConfigIsSet).toBeFalsy();
+    it("Expect the mergedConfigs to be an empty map", () => {
+      expect(testConfigWithoutParam.mergedConfigs).toEqual(new Map());
     });
   });
 
-  describe("When userConfig setter is called", () => {
+  describe("When setUserConfig method is called", () => {
     const newUserConfig: EditorConfigSchema = {
       plugins: {
         toolbar: false,
@@ -108,138 +105,253 @@ describe("Config", () => {
       },
     };
 
-    let testConfigWithParam: ConfigWithParamType,
-      testConfigWithoutParam: ConfigWithoutParamType;
+    const configName = "__test_setUserConfig_name__";
+
+    let testConfigWithParam: ConfigWithParamType;
 
     beforeEach(() => {
       testConfigWithParam = configWithParam();
-      testConfigWithoutParam = configWithoutParam();
     });
 
     afterEach(() => {
       vi.restoreAllMocks();
     });
 
-    it("With the _userConfig already set, Expect the setter not to change _userConfig", () => {
-      const prevUserConfig = testConfigWithParam.userConfig;
-      testConfigWithParam.userConfig = newUserConfig;
+    it("With a none-existing name, Expect the config to be added to the userConfigs", () => {
+      expect(testConfigWithParam.userConfigs.get(configName)).toBeUndefined();
+      testConfigWithParam.setUserConfig(configName, newUserConfig);
 
-      expect(testConfigWithParam.userConfig).toEqual(prevUserConfig);
+      expect(testConfigWithParam.userConfigs.get(configName)).toEqual(
+        newUserConfig,
+      );
     });
 
-    it("With the _userConfig being undefined, Expect the setter to set _userConfig to the new value", () => {
-      expect(testConfigWithoutParam.userConfig).toBeUndefined();
+    it("With an existing name, Expect the userConfig mapped to name to be updated to the passed config", () => {
+      expect(testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME)).toEqual(
+        mockUserConfig,
+      );
+      testConfigWithParam.setUserConfig(TEST_CONFIG_NAME, newUserConfig);
 
-      testConfigWithoutParam.userConfig = newUserConfig;
-      expect(testConfigWithoutParam.userConfig).toEqual(newUserConfig);
+      expect(testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME)).toEqual(
+        newUserConfig,
+      );
     });
 
-    it("With the _userConfig being undefined, Expect the _mergeConfigs function to be called once", () => {
-      expect(testConfigWithoutParam.userConfig).toBeUndefined();
+    it("With a name that is not string, Expect the method to throw an error", () => {
+      expect(() =>
+        // @ts-expect-error
+        testConfigWithParam.setUserConfig(["invalid_name"], newUserConfig),
+      ).toThrow("'name' must be a string");
+    });
 
+    it("With a name as an empty string, Expect the method to throw an error", () => {
+      expect(() =>
+        testConfigWithParam.setUserConfig("", newUserConfig),
+      ).toThrow("'name' cannot be an empty string");
+    });
+
+    it("Expect the mergeConfigs method to be called once", () => {
       const spy = vi
-        .spyOn(testConfigWithoutParam, "_mergeConfigs")
+        .spyOn(testConfigWithParam, "mergeConfigs")
         .mockImplementationOnce(() => {});
-      testConfigWithoutParam.userConfig = newUserConfig;
 
+      testConfigWithParam.setUserConfig(configName, newUserConfig);
       expect(spy).toHaveBeenCalledOnce();
     });
   });
 
-  describe("When the getConfig method is called", () => {
-    const testConfigWithParam: ConfigWithParamType = configWithParam();
+  describe("When getUserConfigByName method is called", () => {
+    let testConfigWithParam: ConfigWithParamType;
 
-    it("Without a parameter. Expect the method to return the mergedConfig", () => {
-      expect(testConfigWithParam.getConfig()).toEqual(
-        testConfigWithParam.mergedConfig,
-      );
+    beforeEach(() => {
+      testConfigWithParam = configWithParam();
     });
 
-    it("With configType = 'default'. Expect the method to return the defaultConfig", () => {
-      expect(testConfigWithParam.getConfig("default")).toEqual(
-        testConfigWithParam.defaultConfig,
-      );
-    });
-
-    it("With configType = 'user'. Expect the method to return the userConfig", () => {
-      expect(testConfigWithParam.getConfig("user")).toEqual(
-        testConfigWithParam.userConfig,
-      );
-    });
-
-    it("With configType = 'merged'. Expect the method to return the mergedConfig", () => {
-      expect(testConfigWithParam.getConfig("merged")).toEqual(
-        testConfigWithParam.mergedConfig,
-      );
-    });
-
-    it("With configType = ${INVALID_CONFIG_TYPE}. Expect the method to return undefined", () => {
+    it("With a none-existing name, Expect the return to be undefined", () => {
       expect(
-        // @ts-expect-error
-        testConfigWithParam.getConfig(`${INVALID_CONFIG_TYPE}`),
-      ).toBeTypeOf("undefined");
+        testConfigWithParam.getUserConfigByName(
+          "__test_getUserConfigByName_invalid_name__",
+        ),
+      ).toBeUndefined();
+    });
+
+    it("With an existing name, Expect the return to be the userConfig mapped to the name", () => {
+      expect(testConfigWithParam.getUserConfigByName(TEST_CONFIG_NAME)).toEqual(
+        mockUserConfig,
+      );
+    });
+  });
+
+  describe("When getMergedConfigByName method is called", () => {
+    let testConfigWithParam: ConfigWithParamType;
+
+    beforeEach(() => {
+      testConfigWithParam = configWithParam();
+    });
+
+    it("With a none-existing name, Expect the return to be undefined", () => {
+      expect(
+        testConfigWithParam.getMergedConfigByName(
+          "__test_getMergedConfigByName_invalid_name__",
+        ),
+      ).toBeUndefined();
+    });
+
+    it("With an existing name, Expect the return to be the mergedConfig mapped to the name", () => {
+      expect(
+        testConfigWithParam.getMergedConfigByName(TEST_CONFIG_NAME),
+      ).toEqual(mockMergedConfig);
+    });
+
+    describe("With an existing name that is not mapped in the mergedConfigs but is mapped in userConfigs", () => {
+      const configName = "__test_getMergedConfigs__";
+
+      it("Expect the method to create a mergedConfig mapped to the given name and return the config", () => {
+        vi.spyOn(testConfigWithParam, "mergeConfigs").mockImplementationOnce(
+          () => {},
+        );
+
+        testConfigWithParam.setUserConfig(configName, mockUserConfig);
+        expect(
+          testConfigWithParam.mergedConfigs.get(configName),
+        ).toBeUndefined();
+
+        vi.restoreAllMocks();
+
+        const spy = vi.spyOn(testConfigWithParam, "mergeConfigs");
+
+        expect(testConfigWithParam.getMergedConfigByName(configName)).toEqual(
+          mockMergedConfig,
+        );
+
+        expect(spy).toHaveBeenCalledOnce();
+        spy.mockRestore();
+      });
+    });
+  });
+
+  describe("When getConfigByName method is called", () => {
+    let testConfigWithParam: ConfigWithParamType;
+
+    const invalidName = "__test_getConfigByName_invalid_name__";
+
+    beforeEach(() => {
+      testConfigWithParam = configWithParam();
+    });
+
+    it("With a none-existing name and no configType, Expect the return to be undefined", () => {
+      expect(testConfigWithParam.getConfigByName(invalidName)).toBeUndefined();
+    });
+
+    it("With an existing name and no configType, Expect the return to be the mergedConfig mapped to the name", () => {
+      expect(testConfigWithParam.getConfigByName(TEST_CONFIG_NAME)).toEqual(
+        mockMergedConfig,
+      );
+    });
+
+    it("With an existing name and configType = 'user', Expect the return to be the userConfig mapped to the name", () => {
+      expect(
+        testConfigWithParam.getConfigByName(TEST_CONFIG_NAME, "user"),
+      ).toEqual(mockUserConfig);
+    });
+
+    it("With a name that is not a string, Expect an error to be thrown", () => {
+      // @ts-expect-error
+      expect(() => testConfigWithParam.getConfigByName([], "user")).toThrow(
+        `'name' must be a string. Options are: '${TEST_CONFIG_NAME}`,
+      );
+    });
+
+    it("With a configType that is not 'user' or 'merged', Expect an error to be thrown", () => {
+      expect(() =>
+        testConfigWithParam.getConfigByName(
+          TEST_CONFIG_NAME,
+          // @ts-expect-error
+          "invalid_config_type",
+        ),
+      ).toThrow(`'configType' must be 'merged' or 'user'`);
     });
   });
 
   describe("When the getConfigForPath method is called", () => {
     const testConfigWithParam: ConfigWithParamType = configWithParam();
 
-    it("Without any parameters. Expect return to be the whole config using the mergedConfig", () => {
+    it("Without any parameters. Expect the defaultConfig to be returned.", () => {
       expect(testConfigWithParam.getConfigForPath()).toEqual(
-        testConfigWithParam.mergedConfig,
+        testConfigWithParam.defaultConfig,
       );
     });
 
-    it("With configPath = '' and no configType. Expect return to be the whole config using the mergedConfig", () => {
+    it("With configPath = '', no name and no configType. Expect the defaultConfig to be returned", () => {
       expect(testConfigWithParam.getConfigForPath("")).toEqual(
-        testConfigWithParam.mergedConfig,
+        testConfigWithParam.defaultConfig,
       );
     });
 
-    it("With configPath = '' and configType = 'user'. Expect return to be the whole config using the userConfig", () => {
-      expect(testConfigWithParam.getConfigForPath("", "user")).toEqual(
-        testConfigWithParam.userConfig,
-      );
-    });
-
-    it("With configPath = 'plugins.toolbar' and configType ='default'. Expect return to be plugins.toolbar from the defaultConfig", () => {
+    it("With configPath = '', a valid name and configType = 'user'. Expect userConfig mapped to the name to be returned", () => {
       expect(
-        testConfigWithParam.getConfigForPath("plugins.toolbar", "default"),
+        testConfigWithParam.getConfigForPath("", TEST_CONFIG_NAME, "user"),
+      ).toEqual(testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME));
+    });
+
+    it("With configPath = 'plugins.toolbar', name = '' and configType ='default'. Expect return to be plugins.toolbar from the defaultConfig", () => {
+      expect(
+        testConfigWithParam.getConfigForPath("plugins.toolbar", "", "default"),
       ).toEqual(testConfigWithParam.defaultConfig.plugins?.toolbar);
     });
 
-    it(`With configPath = '${INVALID_CONFIG_PATH}' and no configType. Expect return to be undefined`, () => {
+    it("With configPath = 'plugins.toolbar', a valid name and configType ='default'. Expect return to be plugins.toolbar from the mergedConfig", () => {
       expect(
-        // @ts-expect-error
-        testConfigWithParam.getConfigForPath(`${INVALID_CONFIG_PATH}`),
-      ).toBeUndefined();
+        testConfigWithParam.getConfigForPath(
+          "plugins.toolbar",
+          TEST_CONFIG_NAME,
+          "default",
+        ),
+      ).toEqual(
+        testConfigWithParam.mergedConfigs.get(TEST_CONFIG_NAME)?.plugins
+          ?.toolbar,
+      );
     });
 
-    it(`With configPath = '' and configType = '${INVALID_CONFIG_TYPE}'. Expect return to be undefined`, () => {
-      expect(
-        // @ts-expect-error
-        testConfigWithParam.getConfigForPath("", `${INVALID_CONFIG_TYPE}`),
-      ).toBeUndefined();
-    });
-
-    it(`With configPath = '${INVALID_CONFIG_PATH}' and configType = '${INVALID_CONFIG_TYPE}'. Expect return to be undefined`, () => {
+    it(`With configPath = '${INVALID_CONFIG_PATH}', valid name and no configType. Expect return to be undefined`, () => {
       expect(
         testConfigWithParam.getConfigForPath(
           // @ts-expect-error
           `${INVALID_CONFIG_PATH}`,
-          `${INVALID_CONFIG_TYPE}`,
+          TEST_CONFIG_NAME,
         ),
       ).toBeUndefined();
     });
 
-    it("With configPath = 'plugins.notFound' and no configType. Expect return to be undefined", () => {
+    it(`With configPath = '', valid name and configType = '${INVALID_CONFIG_TYPE}'. Expect return to be undefined`, () => {
+      expect(() =>
+        testConfigWithParam.getConfigForPath(
+          "",
+          TEST_CONFIG_NAME,
+          // @ts-expect-error
+          `${INVALID_CONFIG_TYPE}`,
+        ),
+      ).toThrow("'configType' must be 'default', 'merged' or 'user'");
+    });
+
+    it(`With configPath = '', invalid name and configType = 'merged'. Expect return to be undefined`, () => {
+      expect(
+        testConfigWithParam.getConfigForPath(
+          "",
+          "__test_getConfigForPath_invalid_name__",
+          "merged",
+        ),
+      ).toBeUndefined();
+    });
+
+    it("With configPath = 'plugins.notFound', no name and no configType. Expect return to be undefined", () => {
       expect(
         // @ts-expect-error
         testConfigWithParam.getConfigForPath("plugins.notFound"),
       ).toBeUndefined();
     });
 
-    it("With configPath = 'plugins-toolbar' and no configType. Expect return to be undefined", () => {
+    it("With configPath = 'plugins-toolbar', no name and no configType. Expect return to be undefined", () => {
       expect(
         // @ts-expect-error
         testConfigWithParam.getConfigForPath("plugins-toolbar"),
@@ -248,31 +360,22 @@ describe("Config", () => {
   });
 
   describe("When the pluginIsRegistered method is called", () => {
-    describe("With plugin = 'toolbar' and no configType parameters", () => {
-      let testConfigWithParam: ConfigWithParamType,
-        testConfigWithoutParam: ConfigWithoutParamType;
+    describe("With plugin = 'toolbar', no name and no configType parameters", () => {
+      let testConfigWithParam: ConfigWithParamType;
 
       beforeEach(() => {
         testConfigWithParam = configWithParam();
-        testConfigWithoutParam = configWithoutParam();
       });
 
-      it("Expect the _mergedConfig to be used", () => {
+      it("Expect the defaultConfig to be used", () => {
         expect(testConfigWithParam.pluginIsRegistered("toolbar")).toEqual(
           // @ts-expect-error
-          testConfigWithParam.mergedConfig.plugins?.toolbar?.register,
+          testConfigWithParam.defaultConfig.plugins?.toolbar?.register,
         );
-      });
-
-      it("Expect return to be false if the mergedConfig is {}", () => {
-        expect(testConfigWithoutParam.mergedConfig).toEqual({});
-        expect(
-          testConfigWithoutParam.pluginIsRegistered("toolbar"),
-        ).toBeFalsy();
       });
     });
 
-    describe("With plugin = 'toolbar' and configType = 'user' parameters", () => {
+    describe("With plugin = 'toolbar', valid name and configType = 'user' parameters", () => {
       function generateUserConfig(
         toolbar: "object" | "boolean" | "undefined",
         plugins: "object" | "undefined" = "object",
@@ -284,10 +387,10 @@ describe("Config", () => {
         if (plugins === "object") {
           switch (toolbar) {
             case "object":
-              userConfig.plugins = { toolbar: { register: false } };
+              userConfig.plugins = { toolbar: { register: true } };
               break;
             case "boolean":
-              userConfig.plugins = { toolbar: false };
+              userConfig.plugins = { toolbar: true };
               break;
             case "undefined":
               userConfig.plugins = { toolbar: undefined };
@@ -304,8 +407,15 @@ describe("Config", () => {
         );
 
         expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
-        ).toEqual(testConfigWithParam.userConfig?.plugins?.toolbar);
+          testConfigWithParam.pluginIsRegistered(
+            "toolbar",
+            TEST_CONFIG_NAME,
+            "user",
+          ),
+        ).toEqual(
+          testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME)?.plugins
+            ?.toolbar,
+        );
       });
 
       it("Expect return to be equal to the plugins.toolbar.register if plugins.toolbar is object", () => {
@@ -314,10 +424,15 @@ describe("Config", () => {
         );
 
         expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+          testConfigWithParam.pluginIsRegistered(
+            "toolbar",
+            TEST_CONFIG_NAME,
+            "user",
+          ),
         ).toEqual(
-          // @ts-expect-error
-          testConfigWithParam.userConfig?.plugins?.toolbar.register,
+          //@ts-expect-error
+          testConfigWithParam.userConfigs.get(TEST_CONFIG_NAME)?.plugins
+            ?.toolbar.register,
         );
       });
 
@@ -327,7 +442,11 @@ describe("Config", () => {
         );
 
         expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+          testConfigWithParam.pluginIsRegistered(
+            "toolbar",
+            TEST_CONFIG_NAME,
+            "user",
+          ),
         ).toBeFalsy();
       });
 
@@ -337,30 +456,16 @@ describe("Config", () => {
         );
 
         expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "user"),
+          testConfigWithParam.pluginIsRegistered(
+            "toolbar",
+            TEST_CONFIG_NAME,
+            "user",
+          ),
         ).toBeFalsy();
       });
     });
 
-    describe("With plugin = 'toolbar' and configType = 'default' parameters", () => {
-      let testConfigWithParam: ConfigWithParamType;
-
-      beforeEach(() => {
-        testConfigWithParam = configWithParam();
-      });
-
-      it("Expect return to be equal to the plugins.toolbar.register from the defaultConfig if plugins.toolbar", () => {
-        const toolbarPluginConfig =
-          testConfigWithParam.defaultConfig.plugins?.toolbar;
-
-        expect(
-          testConfigWithParam.pluginIsRegistered("toolbar", "default"),
-          // @ts-expect-error
-        ).toEqual(toolbarPluginConfig.register);
-      });
-    });
-
-    describe(`With plugin = '${INVALID_PLUGIN}' and no configType parameters`, () => {
+    describe(`With plugin = '${INVALID_PLUGIN}'`, () => {
       let testConfigWithParam: ConfigWithParamType;
 
       beforeEach(() => {
@@ -370,12 +475,31 @@ describe("Config", () => {
       it("Expect return to be false", () => {
         expect(
           // @ts-expect-error
-          testConfigWithParam.pluginIsRegistered("invalidPlugin"),
+          testConfigWithParam.pluginIsRegistered(`${INVALID_PLUGIN}`),
         ).toBeFalsy();
       });
     });
 
-    describe(`With plugin = 'toolbar' and configType = '${INVALID_CONFIG_TYPE}' parameters`, () => {
+    describe(`With plugin = 'toolbar', name = '', and configType = '${INVALID_CONFIG_TYPE}' parameters`, () => {
+      let testConfigWithParam: ConfigWithParamType;
+
+      beforeEach(() => {
+        testConfigWithParam = configWithParam();
+      });
+
+      it("Expect an error to be thrown", () => {
+        expect(() =>
+          testConfigWithParam.pluginIsRegistered(
+            "toolbar",
+            TEST_CONFIG_NAME,
+            // @ts-expect-error
+            `${INVALID_CONFIG_TYPE}`,
+          ),
+        ).toThrow(`'configType' must be 'default', 'merged' or 'user'`);
+      });
+    });
+
+    describe(`With plugin = 'toolbar', invalid name and configType = 'merged' parameters`, () => {
       let testConfigWithParam: ConfigWithParamType;
 
       beforeEach(() => {
@@ -386,26 +510,8 @@ describe("Config", () => {
         expect(
           testConfigWithParam.pluginIsRegistered(
             "toolbar",
-            // @ts-expect-error
-            `${INVALID_CONFIG_TYPE}`,
-          ),
-        ).toBeFalsy();
-      });
-    });
-
-    describe(`With plugin = '${INVALID_PLUGIN}' and configType = '${INVALID_CONFIG_TYPE}' parameters`, () => {
-      let testConfigWithParam: ConfigWithParamType;
-
-      beforeEach(() => {
-        testConfigWithParam = configWithParam();
-      });
-
-      it("Expect return to be false", () => {
-        expect(
-          testConfigWithParam.pluginIsRegistered(
-            // @ts-expect-error
-            "invalidPlugin",
-            `${INVALID_CONFIG_TYPE}`,
+            "__invalid__name__for_plugin",
+            "merged",
           ),
         ).toBeFalsy();
       });
@@ -413,22 +519,117 @@ describe("Config", () => {
   });
 });
 
-describe("defineConfig", () => {
-  it("Expect userConfig to be set when the defineConfig function is called with a valid config", () => {
-    expect(EditorConfig.userConfigIsSet).toBeFalsy();
-
-    defineConfig({
-      plugins: {
-        toolbar: true,
-        html: true,
-        floatingMenu: {
-          register: true,
-          historyActions: ["undo"],
-        },
+describe("defineConfig1", () => {
+  const config: EditorConfigSchema = {
+    plugins: {
+      toolbar: true,
+      html: true,
+      floatingMenu: {
+        register: true,
+        historyActions: ["undo"],
       },
+    },
+  };
+
+  const configName = "__test_defineConfig_name__";
+
+  describe("When called with editorConfig and no configInstance", () => {
+    it("With a single editorConfig, Expect the config to be set appropriately", () => {
+      defineConfig({
+        name: configName,
+        config,
+      });
+
+      expect(EditorConfig.getUserConfigByName(configName)).toEqual(config);
     });
 
-    expect(EditorConfig.userConfigIsSet).toBeTruthy();
+    it("With an array of editorConfigs, Expect all configs to be set appropriately", () => {
+      defineConfig([
+        {
+          name: `${configName}-1`,
+          config,
+        },
+        {
+          name: `${configName}-2`,
+          config,
+        },
+      ]);
+
+      expect(EditorConfig.getUserConfigByName(`${configName}-1`)).toEqual(
+        config,
+      );
+      expect(EditorConfig.getUserConfigByName(`${configName}-2`)).toEqual(
+        config,
+      );
+    });
+
+    it("With a name that is not a string, Expect error to be thrown", () => {
+      // @ts-expect-error
+      expect(() => defineConfig({ name: [], config })).toThrow(
+        "'name' must be a string",
+      );
+    });
+
+    it("With an editorConfig that's not an object, Expect error to be thrown", () => {
+      expect(() =>
+        // @ts-expect-error
+        defineConfig(""),
+      ).toThrow("Invalid configuration passed to defineConfig");
+    });
+
+    it("With an empty array for editorConfig, Expect error to be thrown", () => {
+      expect(() => defineConfig([])).toThrow(
+        "Invalid configuration passed to defineConfig",
+      );
+    });
+
+    it("With an editorConfig missing required keys, Expect error to be thrown", () => {
+      expect(() =>
+        // @ts-expect-error
+        defineConfig({ name: configName }),
+      ).toThrow("Invalid configuration passed to defineConfig");
+    });
+
+    it("With an array having an editorConfig missing required keys, Expect error to be thrown", () => {
+      expect(() =>
+        // @ts-expect-error
+        defineConfig([{ name: configName }]),
+      ).toThrow("Invalid configuration passed to defineConfig");
+    });
+  });
+
+  describe("When called with editorConfig and a configInstance", () => {
+    it("Expect editorConfig to be set in the configInstance", () => {
+      const testConfigInstance = new Config();
+
+      defineConfig(
+        {
+          name: configName,
+          config,
+        },
+        testConfigInstance,
+      );
+
+      expect(testConfigInstance.getUserConfigByName(configName)).toEqual(
+        config,
+      );
+    });
+
+    it("With a configInstance not instanceof Config, Expect the default config instance to be used", () => {
+      const testConfigInstance = new Map();
+      const _configName = defineConfig(
+        {
+          name: `${configName}-00`,
+          config,
+        },
+        //@ts-expect-error
+        testConfigInstance,
+      );
+
+      expect(EditorConfig.getUserConfigByName(`${configName}-00`)).toEqual(
+        config,
+      );
+    });
   });
 });
 

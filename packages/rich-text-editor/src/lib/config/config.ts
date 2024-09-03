@@ -1,15 +1,20 @@
-import { DEFAULT_EDITOR_CONFIG } from "./default";
+import { deepFreeze } from "../utils";
 import {
   BooleanKeysInDefaultConfig,
+  NamedConfig,
+  NamedConfigKeys,
   type AvailableConfigs,
   type ConfigPaths,
   type EditorConfigSchema,
   type PluginsConfigKeys,
 } from "./config.types";
-import { deepFreeze } from "../utils";
+import { DEFAULT_EDITOR_CONFIG } from "./default";
+
+export class UserConfigMap extends Map<string, EditorConfigSchema> {}
+export class MergedConfigMap extends Map<string, EditorConfigSchema> {}
 
 /**
- * Class for handling configuration of the editor
+ * Class for handling editor configuration
  */
 export class Config {
   /**
@@ -20,60 +25,112 @@ export class Config {
   private _defaultConfig: EditorConfigSchema = deepFreeze(
     structuredClone(DEFAULT_EDITOR_CONFIG),
   );
+
   /**
-   * Configuration provided by the user
+   * Mapping of the configurations provided by the user
    *
    * @private
    */
-  private _userConfig?: EditorConfigSchema;
+  private _userConfigs: UserConfigMap;
+
   /**
-   * defaultConfig and userConfig merged
+   * Mapping of the userConfig merged with the defaultConfig.
+   * Configs are assigned same name as in userConfig.
    *
-   * @see _mergeConfigs
+   * @see Config1.mergeConfigs
    *
    * @private
    */
-  private _mergedConfig: EditorConfigSchema = {};
+  private _mergedConfigs: MergedConfigMap;
 
-  constructor(config?: EditorConfigSchema) {
-    if (config) {
-      this._userConfig = deepFreeze(config);
-      this._mergeConfigs();
-    }
-  }
+  constructor(config?: NamedConfig | NamedConfig[]) {
+    this._userConfigs = new UserConfigMap();
+    this._mergedConfigs = new MergedConfigMap();
 
-  get userConfigIsSet() {
-    return this._userConfig !== undefined;
-  }
-
-  set userConfig(config: EditorConfigSchema | undefined) {
-    if (!this.userConfigIsSet) {
-      this._userConfig = deepFreeze(config);
-      this._mergeConfigs();
-    }
-  }
-
-  get userConfig() {
-    return this._userConfig;
+    config && defineConfig(config, this);
   }
 
   get defaultConfig() {
     return this._defaultConfig;
   }
 
-  get mergedConfig() {
-    return this._mergedConfig;
+  /**
+   * @returns a clone of the _userConfigs
+   */
+  get userConfigs() {
+    return structuredClone(this._userConfigs);
+  }
+
+  /**
+   * @returns a clone of the _mergedConfigs
+   */
+  get mergedConfigs() {
+    return structuredClone(this._mergedConfigs);
+  }
+
+  /**
+   * Gets the userConfig with the given name.
+   *
+   * @param name Name of the userConfig to get
+   *
+   * @returns userConfig with the given name if found, else undefined.
+   */
+  getUserConfigByName(name: string): EditorConfigSchema | undefined {
+    return this._userConfigs.get(name);
+  }
+
+  /**
+   * Gets the mergedConfig with the given name.
+   * Names for the mergedConfigs are same as those for the userConfigs.
+   *
+   * If the mergedConfig is not found, and userConfig with same name is found,
+   * the {@link Config1.mergeConfigs} method is called and the resulting mergedConfig
+   * is returned.
+   *
+   * @param name Name of the mergedConfig to get
+   *
+   * @returns mergedConfig with the given name if found, else undefined.
+   */
+  getMergedConfigByName(name: string): EditorConfigSchema | undefined {
+    if (!this._mergedConfigs.get(name) && this._userConfigs.get(name))
+      this.mergeConfigs(name);
+
+    return this._mergedConfigs.get(name);
+  }
+
+  /**
+   * Sets the userConfig with the given name to the given config.
+   * If a userConfig with the given name is not found, it is created.
+   * Also the mergedConfig is generated from the new userConfig.
+   *
+   * @param name Name to map to the config
+   * @param config Configuration passed to be mapped to the given name
+   */
+  setUserConfig(name: string, config: EditorConfigSchema) {
+    if (typeof name !== "string") throw new Error("'name' must be a string");
+
+    if (name === "") throw new Error("'name' cannot be an empty string");
+
+    this._userConfigs.set(name, config);
+    this.mergeConfigs(name);
   }
 
   /**
    * Merges the `defaultConfig` and the `userConfig` into `mergedConfig`.
    *
+   * @param name Name of the config to merge
+   *
    * @see mergeConfigs
    */
-  _mergeConfigs() {
-    this._mergedConfig = deepFreeze(
-      mergeConfigs(this._defaultConfig, this._userConfig),
-    );
+  mergeConfigs(name: string) {
+    const userConfig = this._userConfigs.get(name);
+
+    if (userConfig) {
+      this._mergedConfigs.set(
+        name,
+        mergeConfigs(this._defaultConfig, userConfig),
+      );
+    }
   }
 
   /**
@@ -81,19 +138,38 @@ export class Config {
    * Defaults to getting the `merged` configuration if the configType
    * is not given.
    *
-   * @param configType The configuration to use. Either `default`, `user` or `merged`.
+   * @param name Name mapped to the config to get. Must be provided for user and merged
+   * configTypes.
+   * @param configType The configuration to use. Either `user` or `merged`.
    * Defaults to `merged`
    *
-   * @returns Configuration of the type provided.
+   * @returns Configuration of the type provided with the given name.
+   *
+   * @throws If the name is not a string.
+   * @throws If the configType is not either `merged` or `user`.
    */
-  getConfig(configType: AvailableConfigs = "merged") {
-    switch (configType) {
-      case "default":
-        return this._defaultConfig;
-      case "user":
-        return this._userConfig;
-      case "merged":
-        return this._mergedConfig;
+  getConfigByName(
+    name: string,
+    configType: Exclude<AvailableConfigs, "default"> = "merged",
+  ) {
+    if (typeof name !== "string") {
+      const keys = [];
+      for (const key of this._userConfigs.keys()) keys.push(`'${key}'`);
+
+      throw new Error(
+        `'name' must be a string. Options are: ${keys.join(", ")}`,
+      );
+    }
+
+    if (configType !== "merged" && configType !== "user")
+      throw new Error("'configType' must be 'merged' or 'user'");
+
+    const userConfig = this._userConfigs.get(name);
+
+    if (configType === "user") {
+      return this.getUserConfigByName(name);
+    } else {
+      return this.getMergedConfigByName(name);
     }
   }
 
@@ -104,21 +180,44 @@ export class Config {
    *
    * @param configPath The path of the configuration to get. eg `plugins.toolbar`.
    * Defaults to "".
+   * @param name Name mapped to the config to use. This is required if the configType is
+   * `merged` or `user`.
    * @param configType The configuration to use. Either `default`, `user` or `merged`.
-   * Defaults to `merged`
+   * Defaults to `default`
    *
    * @returns Configuration matching the path, else undefined.
    */
   getConfigForPath(
     configPath: ConfigPaths = "",
-    configType?: AvailableConfigs,
+    name: string = "",
+    configType: AvailableConfigs = "default",
   ) {
-    if (configPath === "") return this.getConfig(configType);
+    if (
+      configType !== "merged" &&
+      configType !== "user" &&
+      configType !== "default"
+    )
+      throw new Error("'configType' must be 'default', 'merged' or 'user'");
+
+    /**
+     * If name is given, use the merged or user configType even if default is specified.
+     */
+    const _configType = name
+      ? configType !== "default"
+        ? configType
+        : "merged"
+      : "default";
+
+    const _config =
+      _configType === "default"
+        ? this._defaultConfig
+        : this.getConfigByName(name, _configType);
+
+    if (configPath === "") return _config;
 
     const [parent, ...children] = configPath.split(".");
 
-    let currentConfig: any =
-      this.getConfig(configType)?.[parent as keyof EditorConfigSchema];
+    let currentConfig: any = _config?.[parent as keyof EditorConfigSchema];
 
     let i = 0;
     while (currentConfig && i < children.length) {
@@ -133,14 +232,24 @@ export class Config {
    * Checks whether a given plugin is registered.
    *
    * @param plugin Plugin to check if it's registered
+   * @param name Name mapped to the config to use. If given, then configType will be
+   * `merged` or `user`. `default` is not used when name is given.
    * @param configType The configuration to use. Either `default`, `user` or `merged`.
-   * Defaults to `merged`
+   * Defaults to `default`
    *
    * @returns If plugin is not configured, `false` is returned else the value of `register`
    * for the given plugin is returned.
    */
-  pluginIsRegistered(plugin: PluginsConfigKeys, configType?: AvailableConfigs) {
-    const pluginConfig = this.getConfigForPath(`plugins.${plugin}`, configType);
+  pluginIsRegistered(
+    plugin: PluginsConfigKeys,
+    name?: string,
+    configType?: AvailableConfigs,
+  ) {
+    const pluginConfig = this.getConfigForPath(
+      `plugins.${plugin}`,
+      name,
+      configType,
+    );
 
     return (
       pluginConfig !== undefined &&
@@ -149,30 +258,68 @@ export class Config {
   }
 }
 
+/**
+ * Define configuration to be used by the editor.
+ *
+ * @param editorConfig A single or array of configs that are going to be applied
+ * to the editor.
+ * @param configInstance Instance of the Config on which to define the configuration
+ * in. {@link EditorConfig} will be used if this param is not provided.
+ *
+ * @see {@link NamedConfig}
+ */
+export function defineConfig(
+  editorConfig: NamedConfig | NamedConfig[],
+  configInstance?: Config,
+) {
+  if (!isValidNamedConfig(editorConfig)) {
+    throw new Error("Invalid configuration passed to defineConfig");
+  }
+
+  const _configInstance =
+    configInstance && configInstance instanceof Config
+      ? configInstance
+      : EditorConfig;
+
+  if (Array.isArray(editorConfig)) {
+    for (const { name, config } of editorConfig) {
+      _configInstance.setUserConfig(name, config);
+    }
+  } else if (typeof editorConfig === "object") {
+    const { name, config } = editorConfig;
+    _configInstance.setUserConfig(name, config);
+  }
+}
+
+function isValidNamedConfig(config: any) {
+  if (typeof config !== "object") return false;
+
+  if (Array.isArray(config) && config.length === 0) return false;
+
+  const checkRequiredKeys = (configKeys: any) => {
+    if (NamedConfigKeys.required.some((key) => !configKeys.includes(key)))
+      return false;
+    return true;
+  };
+
+  if (Array.isArray(config)) {
+    for (const _config of config) {
+      const configKeys = Object.keys(_config);
+
+      if (!checkRequiredKeys(configKeys)) return false;
+    }
+  } else {
+    const configKeys = Object.keys(config);
+
+    return checkRequiredKeys(configKeys);
+  }
+
+  return true;
+}
+
 const EditorConfig = new Config();
 
 export default EditorConfig;
-
-/**
- * Takes the user configuration and sets it in the EditorConfig.
- *
- * @param userConfig Custom user configuration
- *
- * @example
- * defineConfig({
- *   plugins: {
- *     toolbar: true,
- *     floatingMenu: {
- *       register: true,
- *       textActions: ["bold", "italic", "underline", "strikethrough"]
- *     },
- *     html: true,
- *   },
- * })
- */
-export function defineConfig(userConfig: EditorConfigSchema) {
-  EditorConfig.userConfig = userConfig;
-}
 
 /**
  * Recursively merges the default and custom user configurations.

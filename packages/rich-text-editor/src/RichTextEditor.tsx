@@ -1,29 +1,35 @@
-import { useMemo } from "react";
+import { ListItemNode, ListNode } from "@lexical/list";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import {
   InitialConfigType,
   LexicalComposer,
 } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListItemNode, ListNode } from "@lexical/list";
+import { useEffect, useMemo } from "react";
 
+import "./RichTextEditor.css";
 import { RichTextEditorProps } from "./RichTextEditor.types";
 import RichTextEditorTheme from "./RichTextEditorTheme";
-import "./RichTextEditor.css";
 
 import { cn } from "./lib/utils";
-import EditorConfig from "./lib/config";
 
 // Custom plugins
+import { Config } from "./lib/config/config";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
-import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import HTMLPlugin from "./plugins/HTMLPlugin";
 import FloatingMenuPlugin from "./plugins/FloatingMenuPlugin";
+import HTMLPlugin from "./plugins/HTMLPlugin";
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
+
+// Contexts
+import {
+  ConfigContextProvider,
+  useConfigContext,
+} from "./contexts/ConfigContext";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -40,14 +46,43 @@ export function RichTextEditor({
   editable = true,
   initialEditorState,
   onEditorChange,
-  editorConfig = {},
+  configInstance,
+  configName,
   children,
   ...rest
 }: RichTextEditorProps) {
-  EditorConfig.userConfig = editorConfig;
+  const {
+    configName: _configName,
+    setConfigName,
+    configType,
+    setConfigType,
+    configInst,
+    setConfigInst,
+  } = useConfigContext();
 
-  const showToolbar = EditorConfig.pluginIsRegistered("toolbar");
-  const showFloatingMenu = EditorConfig.pluginIsRegistered("floatingMenu");
+  useEffect(() => {
+    if (configInstance && configInstance instanceof Config)
+      setConfigInst(configInstance);
+
+    typeof configName === "string" && setConfigName(configName);
+
+    if (configName && configType === "default") setConfigType("merged");
+    else if (!configName) {
+      setConfigType("default");
+    }
+  }, [configName, configType, configInstance]);
+
+  const showToolbar = configInst.pluginIsRegistered(
+    "toolbar",
+    _configName,
+    configType,
+  );
+
+  const showFloatingMenu = configInst.pluginIsRegistered(
+    "floatingMenu",
+    _configName,
+    configType,
+  );
 
   const customContentEditable = useMemo(() => {
     return (
@@ -136,5 +171,16 @@ export function RichTextEditor({
         {children}
       </LexicalComposer>
     </div>
+  );
+}
+
+/**
+ * RichTextEditor with ConfigProvider
+ */
+export function RTE(props: RichTextEditorProps) {
+  return (
+    <ConfigContextProvider>
+      <RichTextEditor {...props} />
+    </ConfigContextProvider>
   );
 }
