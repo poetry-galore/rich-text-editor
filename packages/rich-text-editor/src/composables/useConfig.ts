@@ -1,5 +1,5 @@
-import type { ConfigPaths } from "@/lib/config";
-import { useConfigContext } from "../contexts/ConfigContext";
+import type { ConfigPaths } from "@/config";
+import { useConfigContext } from "@/contexts/ConfigContext";
 
 /**
  * Gets the configuration for a given configPath.

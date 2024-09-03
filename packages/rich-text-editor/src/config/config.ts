@@ -1,4 +1,4 @@
-import { deepFreeze } from "../utils";
+import { deepFreeze } from "../lib/utils";
 import {
   BooleanKeysInDefaultConfig,
   NamedConfig,
@@ -8,7 +8,7 @@ import {
   type EditorConfigSchema,
   type PluginsConfigKeys,
 } from "./config.types";
-import { DEFAULT_EDITOR_CONFIG } from "./default";
+import { DEFAULT_EDITOR_CONFIG } from "./defaultConfig";
 
 export class UserConfigMap extends Map<string, EditorConfigSchema> {}
 export class MergedConfigMap extends Map<string, EditorConfigSchema> {}

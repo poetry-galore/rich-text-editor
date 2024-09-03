@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
+import { defineConfig } from "@/config";
 import { RTE } from "./RichTextEditor";
 import "./RichTextEditor.css";
-import { defineConfig } from "./lib/config";
 
 const meta = {
   title: "RichTextEditor",

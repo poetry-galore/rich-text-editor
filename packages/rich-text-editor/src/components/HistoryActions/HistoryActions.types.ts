@@ -1,4 +1,4 @@
-import { HistoryActionsConfig } from "@/lib/config";
+import { HistoryActionsConfig } from "@/config";
 
 export type HistoryActionsProps = React.AllHTMLAttributes<HTMLDivElement> & {
   /**

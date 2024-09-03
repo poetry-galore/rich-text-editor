@@ -1,4 +1,4 @@
-import type { BlockTypesConfig } from "@/lib/config";
+import type { BlockTypesConfig } from "@/config";
 
 export const blockTypeToBlockName: Record<string, string> = {
   paragraph: "Normal",

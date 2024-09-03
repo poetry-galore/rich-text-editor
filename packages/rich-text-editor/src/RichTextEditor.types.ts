@@ -1,5 +1,5 @@
+import { Config } from "@/config";
 import { InitialEditorStateType } from "@lexical/react/LexicalComposer";
-import { Config } from "./lib/config/config";
 import { CustomOnChangePluginProps } from "./plugins/CustomOnChangePlugin/CustomOnChangePlugin.types";
 
 interface Props {

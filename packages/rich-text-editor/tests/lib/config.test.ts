@@ -1,12 +1,11 @@
 import {
-  DEFAULT_EDITOR_CONFIG,
-  EditorConfigSchema,
-} from "../../src/lib/config";
-import EditorConfig, {
   Config,
+  DEFAULT_EDITOR_CONFIG,
+  EditorConfig,
+  EditorConfigSchema,
   defineConfig,
   mergeConfigs,
-} from "../../src/lib/config/config";
+} from "../../src/config";
 
 const mockUserConfig: EditorConfigSchema = {
   plugins: {

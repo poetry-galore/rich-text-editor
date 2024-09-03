@@ -1,29 +1,32 @@
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
-  INSERT_ORDERED_LIST_COMMAND,
-  REMOVE_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
   $isListNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
   ListNode,
+  REMOVE_LIST_COMMAND,
 } from "@lexical/list";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $createHeadingNode,
   $createQuoteNode,
-  HeadingTagType,
   $isHeadingNode,
+  HeadingTagType,
 } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 import {
-  $getSelection,
+  $findMatchingParent,
+  $getNearestNodeOfType,
+  mergeRegister,
+} from "@lexical/utils";
+import {
   $createParagraphNode,
+  $getSelection,
   $isRangeSelection,
   $isRootOrShadowRoot,
   COMMAND_PRIORITY_CRITICAL,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
-import { $findMatchingParent } from "@lexical/utils";
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   Heading1Icon,
@@ -40,15 +43,14 @@ import {
 
 import {
   Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-import type { BlockTypesConfig } from "@/lib/config";
 import {
   type BlockTypeDropdownProps,
   blockTypeToBlockName,
@@ -61,16 +63,18 @@ export default function BlockTypeDropdown({
   config,
   separator,
 }: BlockTypeDropdownProps) {
-  const memoizedConfig: BlockTypesConfig = useMemo(() => {
+  type ConfigType = Exclude<typeof config, undefined>;
+
+  const memoizedConfig: ConfigType = useMemo(() => {
     let _config = config
       ? config
       : ["paragraph", "h1", "h2", "quote", "bullet", "number"];
 
     // Ensure paragraph is in config
     if (_config.length > 0 && !_config.includes("paragraph")) {
-      return ["paragraph"].concat(_config) as BlockTypesConfig;
+      return ["paragraph"].concat(_config) as ConfigType;
     }
-    return _config as BlockTypesConfig;
+    return _config as ConfigType;
   }, [config]);
 
   const [editor] = useLexicalComposerContext();
