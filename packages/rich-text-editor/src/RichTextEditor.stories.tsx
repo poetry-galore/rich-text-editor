@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import { defineConfig } from "@/config";
+import { defineConfig } from "./config";
 import { RTE } from "./RichTextEditor";
 import "./RichTextEditor.css";
 

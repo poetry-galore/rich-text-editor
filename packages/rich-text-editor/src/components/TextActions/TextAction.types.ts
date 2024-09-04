@@ -1,7 +1,7 @@
-import { type TextActionsConfig, TEXT_ACTIONS } from "@/config";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { TextFormatType } from "lexical";
 import React from "react";
+import { type TextActionsConfig, TEXT_ACTIONS } from "../../config";
 
 /**
  * TextActions props

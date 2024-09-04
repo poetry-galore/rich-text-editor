@@ -1,5 +1,5 @@
-import { AvailableConfigs, Config, EditorConfig } from "@/config";
 import { createContext, ReactNode, useContext, useState } from "react";
+import { AvailableConfigs, Config, EditorConfig } from "../config";
 
 export type ConfigContextType = {
   configName: string;

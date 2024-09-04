@@ -19,7 +19,7 @@ import RichTextEditorTheme from "./RichTextEditorTheme";
 import { cn } from "./lib/utils";
 
 // Custom plugins
-import { Config } from "@/config";
+import { Config } from "./config";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
 import FloatingMenuPlugin from "./plugins/FloatingMenuPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
