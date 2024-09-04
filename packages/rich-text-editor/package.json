@@ -18,7 +18,7 @@
     "test:ui": "vitest --ui",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "rollup": "npm run rollup:prod && npm run rollup:dev && node scripts/generateIndex.js",
+    "rollup": "npm run rollup:prod",
     "rollup:prod": "NODE_ENV=production rollup -c --bundleConfigAsCjs",
     "rollup:dev": "NODE_ENV=development rollup -c --bundleConfigAsCjs",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
