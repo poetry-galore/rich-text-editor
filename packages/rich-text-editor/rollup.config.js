@@ -1,11 +1,11 @@
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
+import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
-import terser from "@rollup/plugin-terser";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import replace from "@rollup/plugin-replace";
 import _visualizer from "rollup-plugin-visualizer";
 
 import { getFiles } from "./scripts/buildUtils";
@@ -32,7 +32,7 @@ const outputs = [
     format: "cjs",
     preserveModules: true,
     preserveModulesRoot: "src",
-    entryFileNames: `[name].${isProduction ? "prod" : "dev"}.js`,
+    entryFileNames: `${isProduction ? `[name].js` : `[name].dev.js`}`,
     exports: "named",
     minify: isProduction,
   },
@@ -41,7 +41,7 @@ const outputs = [
     format: "esm",
     preserveModules: true,
     preserveModulesRoot: "src",
-    entryFileNames: `[name].${isProduction ? "prod" : "dev"}.mjs`,
+    entryFileNames: `${isProduction ? `[name].mjs` : `[name].dev.mjs`}`,
     exports: "named",
     minify: isProduction,
   },
@@ -61,7 +61,9 @@ export default [
         "src/index.ts",
         ...getFiles("./src/plugins", extensions, excludeExtensions),
         ...getFiles("./src/components", extensions, excludeExtensions),
-        ...getFiles("./src/composables", extensions, excludeExtensions),
+        ...getFiles("./src/hooks", extensions, excludeExtensions),
+        ...getFiles("./src/config", extensions, excludeExtensions),
+        ...getFiles("./src/contexts", extensions, excludeExtensions),
         ...getFiles("./src/lib", extensions, excludeExtensions),
       ],
       output: {
@@ -89,7 +91,7 @@ export default [
             },
             mangle: true,
             format: {
-              comments: true,
+              comments: false,
             },
           }),
         visualizer({
