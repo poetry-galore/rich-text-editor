@@ -40,8 +40,10 @@ function onError(error: Error) {
 
 /**
  * Rich text editor built using Lexical.
+ *
+ * For a configurable editor use {@link RichTextEditor}
  */
-export function RichTextEditor({
+export function RTE({
   placeholderText = "Start your poem...",
   editable = true,
   initialEditorState,
@@ -175,12 +177,14 @@ export function RichTextEditor({
 }
 
 /**
- * RichTextEditor with ConfigProvider
+ * {@link RTE} wrapped in the {@link ConfigContextProvider}.
+ *
+ * Can be configured as needed using `defineConfig` function.
  */
-export function RTE(props: RichTextEditorProps) {
+export function RichTextEditor(props: RichTextEditorProps) {
   return (
     <ConfigContextProvider>
-      <RichTextEditor {...props} />
+      <RTE {...props} />
     </ConfigContextProvider>
   );
 }

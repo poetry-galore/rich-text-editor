@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
 import { defineConfig } from "./config";
-import { RTE } from "./RichTextEditor";
+import { RichTextEditor } from "./RichTextEditor";
 import "./RichTextEditor.css";
 
 const meta = {
   title: "RichTextEditor",
-  component: RTE,
+  component: RichTextEditor,
   parameters: {
     layout: "fullscreen",
   },
@@ -23,7 +23,7 @@ const meta = {
     placeholderText: { control: "text" },
     editable: { control: "boolean" },
   },
-} satisfies Meta<typeof RTE>;
+} satisfies Meta<typeof RichTextEditor>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
