@@ -22,7 +22,7 @@ export class Config {
    *
    * @private
    */
-  private _defaultConfig: EditorConfigSchema = deepFreeze(
+  _defaultConfig: EditorConfigSchema = deepFreeze(
     structuredClone(DEFAULT_EDITOR_CONFIG),
   );
 
@@ -31,7 +31,7 @@ export class Config {
    *
    * @private
    */
-  private _userConfigs: UserConfigMap;
+  _userConfigs: UserConfigMap;
 
   /**
    * Mapping of the userConfig merged with the defaultConfig.
@@ -41,7 +41,7 @@ export class Config {
    *
    * @private
    */
-  private _mergedConfigs: MergedConfigMap;
+  _mergedConfigs: MergedConfigMap;
 
   constructor(config?: NamedConfig | NamedConfig[]) {
     this._userConfigs = new UserConfigMap();
