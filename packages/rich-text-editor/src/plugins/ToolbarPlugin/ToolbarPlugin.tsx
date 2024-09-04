@@ -1,8 +1,8 @@
+import BlockTypeDropdown from "@/components/BlockTypeDropdown";
 import HistoryActions from "@/components/HistoryActions";
 import TextActions from "@/components/TextActions";
-import BlockTypeDropdown from "@/components/BlockTypeDropdown";
 
-import { useConfig } from "@/composables/useConfig";
+import { useConfig } from "@/hooks/useConfig";
 
 /**
  * Contains all actions that can be done on the editor.

@@ -1,8 +1,8 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useLayoutEffect } from "react";
 
+import useCustomEditorState from "@/hooks/useCustomEditorState";
 import { CustomOnChangePluginProps } from "./CustomOnChangePlugin.types";
-import useCustomEditorState from "@/composables/useCustomEditorState";
 
 const CAN_USE_DOM =
   typeof window !== "undefined" &&

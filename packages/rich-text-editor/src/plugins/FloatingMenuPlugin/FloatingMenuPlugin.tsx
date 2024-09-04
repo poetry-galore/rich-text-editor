@@ -1,11 +1,11 @@
-import { createPortal } from "react-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { $getSelection, $isRangeSelection } from "lexical";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { computePosition } from "@floating-ui/dom";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $getSelection, $isRangeSelection } from "lexical";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { FloatingMenu, FloatingMenuCoords } from "@/components/FloatingMenu";
-import { usePointerInteractions } from "@/composables/usePointerInteractions";
+import { usePointerInteractions } from "@/hooks/usePointerInteractions";
 
 const DOM_ELEMENT = document.body;
 

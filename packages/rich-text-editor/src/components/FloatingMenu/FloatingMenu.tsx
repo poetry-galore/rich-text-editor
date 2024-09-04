@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
 
-import { FloatingMenuProps } from "./FloatingMenu.types";
+import { useConfig } from "@/hooks/useConfig";
 import TextActions from "../TextActions";
-import { useConfig } from "@/composables/useConfig";
+import { FloatingMenuProps } from "./FloatingMenu.types";
 
 export const FloatingMenu = forwardRef<HTMLDivElement, FloatingMenuProps>(
   function FloatingMenu(props, ref) {

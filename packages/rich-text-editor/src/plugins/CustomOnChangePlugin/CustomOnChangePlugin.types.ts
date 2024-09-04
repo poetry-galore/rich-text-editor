@@ -1,4 +1,4 @@
-import { CustomEditorState } from "../../composables/useCustomEditorState";
+import { CustomEditorState } from "../../hooks/useCustomEditorState";
 
 export interface CustomOnChangePluginProps {
   /**
