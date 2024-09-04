@@ -7,13 +7,13 @@ import { createPortal } from "react-dom";
 import { FloatingMenu, FloatingMenuCoords } from "@/components/FloatingMenu";
 import { usePointerInteractions } from "@/hooks/usePointerInteractions";
 
-const DOM_ELEMENT = document.body;
-
 /**
  * Floating menu.
  * A small version of the Toolbar that shows up on selection
  */
 export default function FloatingMenuPlugin() {
+  const DOM_ELEMENT = document && document.body;
+
   const ref = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState<FloatingMenuCoords>(undefined);
   const [editor] = useLexicalComposerContext();
