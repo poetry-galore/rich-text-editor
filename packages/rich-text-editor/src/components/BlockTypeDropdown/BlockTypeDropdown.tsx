@@ -27,7 +27,9 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEditableContext } from "../../contexts/EditableContext";
 
+// Icons
 import {
   Heading1Icon,
   Heading2Icon,
@@ -41,6 +43,7 @@ import {
   TextQuoteIcon,
 } from "lucide-react";
 
+// Components
 import {
   Select,
   SelectContent,
@@ -78,6 +81,7 @@ export default function BlockTypeDropdown({
   }, [config]);
 
   const [editor] = useLexicalComposerContext();
+  const { editable } = useEditableContext();
 
   const [blockType, setBlockType] =
     useState<keyof typeof blockTypeToBlockName>("paragraph");
@@ -202,7 +206,7 @@ export default function BlockTypeDropdown({
     <>
       <Select
         value={blockType}
-        disabled={!editor.isEditable()}
+        disabled={!editable}
         onValueChange={(value) => {
           switch (value) {
             case "h1":

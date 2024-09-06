@@ -21,6 +21,7 @@ import { cn } from "./lib/utils";
 // Custom plugins
 import { Config } from "./config";
 import CustomOnChangePlugin from "./plugins/CustomOnChangePlugin";
+import EditablePlugin from "./plugins/EditablePlugin";
 import FloatingMenuPlugin from "./plugins/FloatingMenuPlugin";
 import HTMLPlugin from "./plugins/HTMLPlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
@@ -30,6 +31,10 @@ import {
   ConfigContextProvider,
   useConfigContext,
 } from "./contexts/ConfigContext";
+import {
+  EditableContextProvider,
+  useEditableContext,
+} from "./contexts/EditableContext";
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -73,6 +78,12 @@ export function RTE({
       setConfigType("default");
     }
   }, [configName, configType, configInstance]);
+
+  const { setEditable } = useEditableContext();
+
+  useEffect(() => {
+    setEditable(editable);
+  }, [editable]);
 
   const showToolbar = configInst.pluginIsRegistered(
     "toolbar",
@@ -170,6 +181,7 @@ export function RTE({
           <HTMLPlugin initialEditorState={initialEditorState} />
         )}
         {showFloatingMenu && <FloatingMenuPlugin />}
+        <EditablePlugin />
         {children}
       </LexicalComposer>
     </div>
@@ -184,7 +196,9 @@ export function RTE({
 export function RichTextEditor(props: RichTextEditorProps) {
   return (
     <ConfigContextProvider>
-      <RTE {...props} />
+      <EditableContextProvider>
+        <RTE {...props} />
+      </EditableContextProvider>
     </ConfigContextProvider>
   );
 }

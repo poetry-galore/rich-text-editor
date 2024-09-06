@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
@@ -8,25 +7,28 @@ import {
   FORMAT_TEXT_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEditableContext } from "../../contexts/EditableContext";
 
+// Icons
 import {
   faHighlighter,
   faSubscript,
   faSuperscript,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
+  CodeIcon,
   FontBoldIcon,
   FontItalicIcon,
-  UnderlineIcon,
   StrikethroughIcon,
-  CodeIcon,
+  UnderlineIcon,
 } from "@radix-ui/react-icons";
 
+// Components
 import { Toggle } from "@/components/ui/toggle";
 
-import {
+import type {
   TextActionsMapping,
   TextActionsProps,
   TextActionType,
@@ -43,6 +45,7 @@ export default function TextActions({ config }: TextActionsProps) {
   }, [config]);
 
   const [editor] = useLexicalComposerContext();
+  const { editable } = useEditableContext();
 
   const [isBold, setIsBold] = useState<boolean>(false);
   const [isItalic, setIsItalic] = useState<boolean>(false);
@@ -157,7 +160,7 @@ export default function TextActions({ config }: TextActionsProps) {
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, format.type);
               format.setter(pressed);
             }}
-            disabled={!editor.isEditable()}
+            disabled={!editable}
             className="rounded-lg"
           >
             {format.icon instanceof Function ? (

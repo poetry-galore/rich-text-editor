@@ -1,17 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
-  UNDO_COMMAND,
-  REDO_COMMAND,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
+  REDO_COMMAND,
+  UNDO_COMMAND,
 } from "lexical";
+import { useEffect, useMemo, useState } from "react";
+import { useEditableContext } from "../../contexts/EditableContext";
 
+// Icons
+import { faRedoAlt, faUndoAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUndoAlt, faRedoAlt } from "@fortawesome/free-solid-svg-icons";
 
+// Components
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -26,6 +29,7 @@ export const HistoryActions = ({ config, separator }: HistoryActionsProps) => {
   }, [config]);
 
   const [editor] = useLexicalComposerContext();
+  const { editable } = useEditableContext();
 
   const [canUndo, setCanUndo] = useState<boolean>(false);
   const [canRedo, setCanRedo] = useState<boolean>(false);
@@ -75,7 +79,7 @@ export const HistoryActions = ({ config, separator }: HistoryActionsProps) => {
             onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
             size={"sm"}
             className="size-8"
-            disabled={!canUndo}
+            disabled={!canUndo || !editable}
             variant="ghost"
           >
             <FontAwesomeIcon icon={faUndoAlt} />
@@ -86,7 +90,7 @@ export const HistoryActions = ({ config, separator }: HistoryActionsProps) => {
             onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
             size={"sm"}
             className="size-8"
-            disabled={!canRedo}
+            disabled={!canRedo || !editable}
             variant="ghost"
           >
             <FontAwesomeIcon icon={faRedoAlt} />
